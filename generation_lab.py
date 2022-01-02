@@ -117,6 +117,7 @@ class Maze:
             self.l2 = random.randrange(self.r + 5, self.r + self.r * 2 ** 0.5 // 2 - 1, 2)
         if not num or num == 3:
             self.l3 = random.randrange(self.r + 5, self.r + self.r * 2 ** 0.5 // 2 - 1, 2)
+
     def to_create(self):
         R = self.r
         fun = lambda i, g: 1 if not i % 2 or i % 2 and not g % 2 else 0
@@ -303,8 +304,9 @@ class Maze:
         print(f'Проход между 3 и 4 сектором: x = {arr[5]} y = {arr[4]}')
         print(f'вход: x = {self.r} y = {self.r} выход: x = {0} y = {self.r}')
         print(*self.maze, sep='\n')
-
-
+        print(self.maze)
+        #return (arr[1], arr[0]), (arr[3], arr[2]), (arr[5], arr[4]), (self.r, self.r), (0, self.r), self.maze
+        return (self.r, self.r), self.maze
 class Player:
     def __init__(self, x, y, size, keys):
         self.x = x
@@ -359,15 +361,15 @@ class Game:
                     sys.exit()
 
 
-ex2 = Maze(14)  # создание объекта лабиринта с каким-то радиусом
-ex2.make_maze()  # обновление лабиринта
-ex2.update_sek(1)  # обновление сектора (1, 2, 3, 4 - обновление сектора под номером )  1
+# ex2 = Maze(14)  # создание объекта лабиринта с каким-то радиусом
+# ex2.make_maze()  # обновление лабиринта
+# ex2.update_sek(1)  # обновление сектора (1, 2, 3, 4 - обновление сектора под номером )  1
 #####################################################################################  4 2
 #####################################################################################   3
-ex2.update_line()  # обновление координат проходов между секторами (0 - все, 1, 2, 3)    1
+# ex2.update_line()  # обновление координат проходов между секторами (0 - все, 1, 2, 3)    1
 ##################################################################################### 3  2
 
-ex2.info() #выводит инфу
+# ex2.info()  # выводит инфу
 # # game = Game(500, ex2.maze)
 # # keys = {'right': pygame.K_RIGHT,
 # #         'left': pygame.K_LEFT,
