@@ -8,11 +8,12 @@ WIDTH = 1200
 HEIGHT = 800
 HALF_WIDTH = WIDTH // 2
 HALF_HEIGHT = HEIGHT // 2
+PENTA_HIGHT = 5 * HEIGHT
 
 # Количество кадров
-FPS = 120
+FPS = 300
 # Размер квадрата карты
-MAZE = Maze(10)
+MAZE = Maze(11)
 MAZE.make_maze()
 MAZE.update_sek(1)
 MAZE.update_line()

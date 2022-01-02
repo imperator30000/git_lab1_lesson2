@@ -7,8 +7,8 @@ class Drawing:
     def __init__(self, sc):
         self.sc = sc
         self.font = pygame.font.SysFont("Arial", 36, bold=True)
-        self.textures = {"1": pygame.image.load("images/1.png").convert(),
-                         "9": pygame.image.load("images/2.png").convert()
+        self.textures = {1: pygame.image.load("images/1.png").convert(),
+                         9: pygame.image.load("images/2.png").convert()
                          }
 
     def background(self):
