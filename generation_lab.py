@@ -368,102 +368,102 @@ ex2.update_line()  # обновление координат проходов м
 ##################################################################################### 3  2
 
 ex2.info() #выводит инфу
-# game = Game(500, ex2.maze)
-# keys = {'right': pygame.K_RIGHT,
-#         'left': pygame.K_LEFT,
-#         'up': pygame.K_UP,
-#         'down': pygame.K_DOWN}
-# keys1 = {'right': pygame.K_d,
-#          'left': pygame.K_a,
-#          'up': pygame.K_w,
-#          'down': pygame.K_s}
+# # game = Game(500, ex2.maze)
+# # keys = {'right': pygame.K_RIGHT,
+# #         'left': pygame.K_LEFT,
+# #         'up': pygame.K_UP,
+# #         'down': pygame.K_DOWN}
+# # keys1 = {'right': pygame.K_d,
+# #          'left': pygame.K_a,
+# #          'up': pygame.K_w,
+# #          'down': pygame.K_s}
+# #
+# # game.add_players(Player(250, 250, 20, keys))
+# # game.add_players(Player(250, 250, 10, keys1))
+# #
+# # while True:
+# #     game.draw()
+# #     game.events()
 #
-# game.add_players(Player(250, 250, 20, keys))
-# game.add_players(Player(250, 250, 10, keys1))
 #
-# while True:
-#     game.draw()
-#     game.events()
-
-
-def draw(screen, a, n):
-    b = a // n
-    screen.fill((0, 0, 0))
-    for i in range(n):
-        for g in range(n):
-            try:
-                if ex2.maze[i][g] == 0:
-                    pygame.draw.rect(screen, (255, 255, 255), (g * b, i * b, b, b))
-            except Exception:
-                continue
-
-
-C = 9
-if __name__ == '__main__':
-    # инициализация Pygame:
-    pygame.init()
-    # размеры окна:
-
-    # screen — холст, на котором нужно рисовать:
-    screen = pygame.display.set_mode((500, 500))
-    # формирование кадра:
-    # команды рисования на холсте
-
-    # ...
-    # ...
-    # смена (отрисовка) кадра:
-    draw(screen, 500, 220)
-
-    pygame.display.flip()
-    pygame.display.set_caption('Крест')
-    clock = pygame.time.Clock()
-
-    # ожидание закрытия окна:
-    while pygame.event.wait().type != pygame.QUIT:
-        pass
-    # завершение работы:
-    run = True
-    while run:
-        print(C)
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                run = False
-
-        # ex2.update_sek(C % 4)
-        # ex2.make_maze()
-        ex2 = Maze(C + 11)
-        # print(ex2.maze)
-        # ex2.to_create()
-        # ex2.make_maze()
-        # ex2 = Maze(15)
-        # ex2.to_create()
-        # ex2.make_maze()
-        # ex2.update_line(0)
-        # ex2.line()
-        draw(screen, 1000, 200)
-
-        # clock.tick(1)
-
-        pygame.display.flip()
-        # screen.fill((0, 0, 0))
-        C += 1
-    pygame.quit()
-
-# print(ex.road)
-# ex1 = Road('right', 8, maps, 3)
-# ex1.to_create()
+# def draw(screen, a, n):
+#     b = a // n
+#     screen.fill((0, 0, 0))
+#     for i in range(n):
+#         for g in range(n):
+#             try:
+#                 if ex2.maze[i][g] == 0:
+#                     pygame.draw.rect(screen, (255, 255, 255), (g * b, i * b, b, b))
+#             except Exception:
+#                 continue
 #
-# ex2 = Road('down', 2, maps, 4, True)
-# ex2.to_create()
-# ex2 * ex1
-# ex2 * ex
-# for i in ex1.road:
-#     print('\n')
-#     for g in i:
-#         if g in (2, 3, 4):
-#             print(0, end='')
 #
-#         elif g == 9:
-#             print(' ', end='')
-#         else:
-#             print('_', end='')
+# C = 9
+# if __name__ == '__main__':
+#     # инициализация Pygame:
+#     pygame.init()
+#     # размеры окна:
+#
+#     # screen — холст, на котором нужно рисовать:
+#     screen = pygame.display.set_mode((500, 500))
+#     # формирование кадра:
+#     # команды рисования на холсте
+#
+#     # ...
+#     # ...
+#     # смена (отрисовка) кадра:
+#     draw(screen, 500, 220)
+#
+#     pygame.display.flip()
+#     pygame.display.set_caption('Крест')
+#     clock = pygame.time.Clock()
+#
+#     # ожидание закрытия окна:
+#     while pygame.event.wait().type != pygame.QUIT:
+#         pass
+#     # завершение работы:
+#     run = True
+#     while run:
+#         print(C)
+#         for event in pygame.event.get():
+#             if event.type == pygame.QUIT:
+#                 run = False
+#
+#         # ex2.update_sek(C % 4)
+#         # ex2.make_maze()
+#         ex2 = Maze(C + 11)
+#         # print(ex2.maze)
+#         # ex2.to_create()
+#         # ex2.make_maze()
+#         # ex2 = Maze(15)
+#         # ex2.to_create()
+#         # ex2.make_maze()
+#         # ex2.update_line(0)
+#         # ex2.line()
+#         draw(screen, 1000, 200)
+#
+#         # clock.tick(1)
+#
+#         pygame.display.flip()
+#         # screen.fill((0, 0, 0))
+#         C += 1
+#     pygame.quit()
+#
+# # print(ex.road)
+# # ex1 = Road('right', 8, maps, 3)
+# # ex1.to_create()
+# #
+# # ex2 = Road('down', 2, maps, 4, True)
+# # ex2.to_create()
+# # ex2 * ex1
+# # ex2 * ex
+# # for i in ex1.road:
+# #     print('\n')
+# #     for g in i:
+# #         if g in (2, 3, 4):
+# #             print(0, end='')
+# #
+# #         elif g == 9:
+# #             print(' ', end='')
+# #         else:
+# #             print('_', end='')
