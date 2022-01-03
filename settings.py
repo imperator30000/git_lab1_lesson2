@@ -1,7 +1,7 @@
 # game settings
 import math
 from generation_lab import Maze
-
+import pygame
 # Разрешение окна
 
 WIDTH = 1200
@@ -12,7 +12,7 @@ HALF_HEIGHT = HEIGHT // 2
 # Количество кадров
 FPS = 120
 # Размер квадрата карты
-MAZE = Maze(10)
+MAZE = Maze(13)
 MAZE.make_maze()
 MAZE.update_sek(1)
 MAZE.update_line()
@@ -25,7 +25,7 @@ FPS_POS = (WIDTH - 65, 5)
 # player settings
 # player_pos = (HALF_WIDTH, HALF_HEIGHT)  # Позиция игрока
 player_angle = 0  # Направление взгляда
-player_speed = 2  # Скорость перемещения игрока
+player_speed = 5  # Скорость перемещения игрока
 
 # ray casting settings
 FOV = math.pi / 3  # Угол обзора
@@ -52,3 +52,19 @@ DARKGRAY = (40, 40, 40)
 PURPLE = (120, 0, 120)
 SKYBLUE = (0, 186, 255)
 YELLOW = (220, 220, 0)
+
+
+
+anim__ = [pygame.transform.scale(pygame.image.load(f'images/111/{i}.png'), (WIDTH, HEIGHT)) for i in range(21)]
+def anim(arr, sk, counter=0, name=0, x=0, y=0):
+    if counter > len(arr) ** 2 - len(arr):
+        counter = 0
+    if name:
+        sk.blit(arr[counter // len(arr)], (x - int(arr[counter // len(arr)].get_rect()[2]), y))
+    else:
+        sk.blit(arr[counter // len(arr)], (x, y))
+    print(counter // len(arr))
+    counter += 7
+
+    return counter
+c = 0
