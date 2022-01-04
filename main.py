@@ -17,18 +17,20 @@ while True:
         if event.type == pygame.QUIT:
             exit()
 
-    player.movement()  # Ходьба
+    player.movement(drawing)  # Ходьба
+    # Обновляем экран на каждой итэрации
+    pygame.display.flip()
     # Черный фон
     sc.fill(BLACK)
     # Рисуем землю и небо
     drawing.background()
     # Рисуем стены
     drawing.world(player.pos, player.angle)
+    #minimap
+    drawing.minimap(player.pos)
     # счётчик фпсD
     drawing.fps(clock)
-    c = anim(anim__, sc, c)
     drawing.chek_win(player.pos)
 
-    # Обновляем экран на каждой итэрации
-    pygame.display.flip()
-    clock.tick()
+
+    clock.tick(FPS)

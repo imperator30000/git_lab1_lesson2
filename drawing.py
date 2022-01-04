@@ -14,6 +14,11 @@ class Drawing:
         self.textures = {1: pygame.image.load("images/1.png").convert(),
                          9: pygame.image.load("images/2.png").convert()
                          }
+        self.map = [[0 for g in range(len(game_map))] for i in range(len(game_map))]
+        start = RADIUS - 3
+        for i in range(7):
+            for g in range(7):
+                self.map[start + i][start + g] = 1
 
     def background(self):
         # Рисуем землю и небо
@@ -47,4 +52,43 @@ class Drawing:
         self.sc.blit(render, (rect.centerx - 430, rect.centery - 140))
         pygame.display.flip()
         self.clock.tick(15)
+
+    def minimap(self, player_pos):
+        # отрисовка миникарты
+        x, y = player_pos
+        x //= 100
+        y //= 100
+        x = int(x)
+        y = int(y)
+        x_map, y_map = 0, 0
+        self.map[int(y)][int(x)] = 1
+        n = 15
+        k = 10
+        pygame.draw.rect(self.sc, (0, 0, 0),
+                         (x_map, y_map, (n + 2) * k, (n + 2) * k))
+        for i in range(n):
+            for g in range(n):
+                try:
+
+                    if self.map[y + i - n // 2][x + g - n // 2] and y + i - n // 2 > 0 and x + g - n // 2 > 0:
+                        pygame.draw.rect(self.sc, (100, 100, 100),
+                                         (x_map + k + g * k, y_map + k + i * k, k, k))
+                except IndexError:
+                    pass
+        pygame.draw.circle(self.sc, (100, 255, 100),
+                           tuple([RADIUS * k - n * 2 - (k // 2), RADIUS * k - n * 2 - (k // 2)]), k // 2)
+
+    def anim(self, arr, counter=0, name=0, x=0, y=0):
+        if counter > len(arr) ** 2 - len(arr):
+            counter = 0
+        if name:
+            self.sc.blit(arr[counter // len(arr)], (x - int(arr[counter // len(arr)].get_rect()[2]), y))
+        else:
+            self.sc.blit(arr[counter // len(arr)], (x, y))
+        print(counter // len(arr))
+        counter += len(arr) // 3
+
+
+        return counter
+
 

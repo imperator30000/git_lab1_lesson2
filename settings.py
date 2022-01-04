@@ -2,6 +2,7 @@
 import math
 from generation_lab import Maze
 import pygame
+
 # Разрешение окна
 
 WIDTH = 1200
@@ -11,14 +12,15 @@ HALF_HEIGHT = HEIGHT // 2
 PENTA_HIGHT = 5 * HEIGHT
 
 # Количество кадров
-FPS = 300
+FPS = 45
 # Размер квадрата карты
-MAZE = Maze(10)
+RADIUS = 12
+MAZE = Maze(RADIUS)
 MAZE.make_maze()
 MAZE.update_sek(1)
 MAZE.update_line()
 player_pos, game_map, win_pos = MAZE.info()
-player_pos = (player_pos[0] * 100, player_pos[1] * 100)
+player_pos = (player_pos[0] * 100 + 50, player_pos[1] * 100 + 50)
 win_pos = (win_pos[0] * 100, win_pos[1] * 100)
 
 TILE = 100
@@ -26,8 +28,8 @@ FPS_POS = (WIDTH - 65, 5)
 
 # player settings
 # player_pos = (HALF_WIDTH, HALF_HEIGHT)  # Позиция игрока
-player_angle = 0  # Направление взгляда
-player_speed = 2  # Скорость перемещения игрока
+player_angle = 4.7  # Направление взгляда
+player_speed = 5  # Скорость перемещения игрока
 
 # ray casting settings
 FOV = math.pi / 3  # Угол обзора
@@ -55,20 +57,11 @@ PURPLE = (120, 0, 120)
 SKYBLUE = (0, 186, 255)
 YELLOW = (220, 220, 0)
 
-anim__ = [pygame.transform.scale(pygame.image.load(f'images/111/{i}.png'), (WIDTH, HEIGHT)) for i in range(21)]
+anim__ = [pygame.transform.scale(pygame.image.load(f'images/анимация/{i}.png'), (WIDTH, HEIGHT)) for i in range(21)]
+animation_hands = True
+animation_hands_counter = 0
 
 
-def anim(arr, sk, counter=0, name=0, x=0, y=0):
-    if counter > len(arr) ** 2 - len(arr):
-        counter = 0
-    if name:
-        sk.blit(arr[counter // len(arr)], (x - int(arr[counter // len(arr)].get_rect()[2]), y))
-    else:
-        sk.blit(arr[counter // len(arr)], (x, y))
-    print(counter // len(arr))
-    counter += 7
-
-    return counter
 
 
 c = 0
