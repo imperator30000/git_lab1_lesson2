@@ -1,7 +1,7 @@
 # game settings
 import math
 from generation_lab import Maze
-
+import pygame
 # Разрешение окна
 
 WIDTH = 1200
@@ -13,12 +13,13 @@ PENTA_HIGHT = 5 * HEIGHT
 # Количество кадров
 FPS = 300
 # Размер квадрата карты
-MAZE = Maze(11)
+MAZE = Maze(10)
 MAZE.make_maze()
 MAZE.update_sek(1)
 MAZE.update_line()
-player_pos, game_map = MAZE.info()
+player_pos, game_map, win_pos = MAZE.info()
 player_pos = (player_pos[0] * 100, player_pos[1] * 100)
+win_pos = (win_pos[0] * 100, win_pos[1] * 100)
 
 TILE = 100
 FPS_POS = (WIDTH - 65, 5)
@@ -53,3 +54,21 @@ DARKGRAY = (40, 40, 40)
 PURPLE = (120, 0, 120)
 SKYBLUE = (0, 186, 255)
 YELLOW = (220, 220, 0)
+
+anim__ = [pygame.transform.scale(pygame.image.load(f'images/111/{i}.png'), (WIDTH, HEIGHT)) for i in range(21)]
+
+
+def anim(arr, sk, counter=0, name=0, x=0, y=0):
+    if counter > len(arr) ** 2 - len(arr):
+        counter = 0
+    if name:
+        sk.blit(arr[counter // len(arr)], (x - int(arr[counter // len(arr)].get_rect()[2]), y))
+    else:
+        sk.blit(arr[counter // len(arr)], (x, y))
+    print(counter // len(arr))
+    counter += 7
+
+    return counter
+
+
+c = 0

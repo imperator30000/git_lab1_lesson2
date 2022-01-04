@@ -306,7 +306,7 @@ class Maze:
         print(*self.maze, sep='\n')
         print(self.maze)
         #return (arr[1], arr[0]), (arr[3], arr[2]), (arr[5], arr[4]), (self.r, self.r), (0, self.r), self.maze
-        return (self.r, self.r), self.maze
+        return (self.r, self.r), self.maze, (0, self.r)
 class Player:
     def __init__(self, x, y, size, keys):
         self.x = x
