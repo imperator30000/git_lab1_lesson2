@@ -1,6 +1,6 @@
 import pygame
 from settings import *
-from map import world_map
+from map import world_map, WORLD_WIDHT, WORLD_HEIGHT
 import math
 
 
@@ -9,6 +9,7 @@ def mapping(a, b):
 
 
 def ray_casting(sc, player_pos, player_angle, textures):
+    texture_v, texture_h = 1, 1
     ox, oy = player_pos
     xm, ym = mapping(ox, oy)
     cur_angle = player_angle - HALF_FOV
@@ -19,7 +20,7 @@ def ray_casting(sc, player_pos, player_angle, textures):
         # Алгоритм просчёта расстояния до стенки
         # Вертикаль
         x, dx = (xm + TILE, 1) if cos_a >= 0 else (xm, -1)
-        for i in range(0, WIDTH, TILE):
+        for i in range(0, WORLD_WIDHT, TILE):
             depth_v = (x - ox) / cos_a
             yv = oy + depth_v * sin_a
             tile_v = mapping(x + dx, yv)
@@ -29,7 +30,7 @@ def ray_casting(sc, player_pos, player_angle, textures):
             x += dx * TILE
         # Горизонталь
         y, dy = (ym + TILE, 1) if sin_a >= 0 else (ym, -1)
-        for i in range(0, HEIGHT, TILE):
+        for i in range(0, WORLD_HEIGHT, TILE):
             depth_h = (y - oy) / sin_a
             xh = ox + depth_h * cos_a
             tile_h = mapping(xh, y + dy)
@@ -43,7 +44,7 @@ def ray_casting(sc, player_pos, player_angle, textures):
         offset = int(offset) % TILE
         depth *= math.cos(player_angle - cur_angle)
         depth = max(depth, 0.00001)
-        proj_hight = min(int(PROJ_COEFF / depth), 2 * HEIGHT)  # Высота проекции стены
+        proj_hight = min(int(PROJ_COEFF / depth), 2 * PENTA_HIGHT)  # Высота проекции стены
 
         wall_column = textures[texture].subsurface(offset * TEXTURE_SCALE, 0, TEXTURE_SCALE, TEXTURE_HEIGHT)
         wall_column = pygame.transform.scale(wall_column, (SCALE, proj_hight))

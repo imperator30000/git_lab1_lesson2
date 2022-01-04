@@ -6,11 +6,10 @@ from drawing import Drawing
 # Основное рабочее окно
 pygame.init()
 sc = pygame.display.set_mode((WIDTH, HEIGHT))
-
+pygame.mouse.set_visible(False)
 clock = pygame.time.Clock()  # Клас для определениея количества кадров в секунду
 player = Player()  # Игрок
-drawing = Drawing(sc)
-
+drawing = Drawing(sc, clock)
 # Основной цикл программы
 while True:
     # Проверка на закрытие программы
@@ -25,9 +24,11 @@ while True:
     drawing.background()
     # Рисуем стены
     drawing.world(player.pos, player.angle)
-    # счётчик фпс
+    # счётчик фпсD
     drawing.fps(clock)
     c = anim(anim__, sc, c)
+    drawing.chek_win(player.pos)
+
     # Обновляем экран на каждой итэрации
     pygame.display.flip()
     clock.tick()
