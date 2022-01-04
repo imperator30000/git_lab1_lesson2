@@ -27,7 +27,7 @@ while True:
     # Рисуем стены
     drawing.world(player.pos, player.angle)
     #minimap
-    drawing.minimap(player.pos)
+    drawing.minimap(player.pos, player.angle)
     # счётчик фпсD
     drawing.fps(clock)
     drawing.chek_win(player.pos)

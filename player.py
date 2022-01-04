@@ -81,7 +81,7 @@ class Player:
         if animation_hands and drawing:
             self.sensitivity *= 5
 
-            animation_hands_counter = drawing.anim(anim__, animation_hands_counter)
+            animation_hands_counter = drawing.anim(anim__, 1, animation_hands_counter)
 
 
     def mouse_control(self):
@@ -89,6 +89,6 @@ class Player:
             difference = pygame.mouse.get_pos()[0] - HALF_WIDTH
             pygame.mouse.set_pos((HALF_WIDTH, HALF_HEIGHT))
             self.angle += difference * self.sensitivity
-            print(self.angle)
+
 
 

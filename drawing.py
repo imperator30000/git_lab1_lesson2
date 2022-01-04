@@ -36,7 +36,6 @@ class Drawing:
         self.sc.blit(render, FPS_POS)
 
     def chek_win(self, player_pos):
-        print(player_pos, win_pos)
         if player_pos[0] < 0:
             while True:
                 for event in pygame.event.get():
@@ -53,7 +52,7 @@ class Drawing:
         pygame.display.flip()
         self.clock.tick(15)
 
-    def minimap(self, player_pos):
+    def minimap(self, player_pos, angel):
         # отрисовка миникарты
         x, y = player_pos
         x //= 100
@@ -75,20 +74,19 @@ class Drawing:
                                          (x_map + k + g * k, y_map + k + i * k, k, k))
                 except IndexError:
                     pass
-        pygame.draw.circle(self.sc, (100, 255, 100),
-                           tuple([RADIUS * k - n * 2 - (k // 2), RADIUS * k - n * 2 - (k // 2)]), k // 2)
 
-    def anim(self, arr, counter=0, name=0, x=0, y=0):
-        if counter > len(arr) ** 2 - len(arr):
-            counter = 0
-        if name:
-            self.sc.blit(arr[counter // len(arr)], (x - int(arr[counter // len(arr)].get_rect()[2]), y))
+        ug = 360 - ((angel - 0.5) // 1.58 + 2) % 4 * 90
+        print('===', ug)
+        self.sc.blit(pygame.transform.rotate(pygame.transform.scale(pygame.image.load('img/kur.png'), (k, k)), ug),
+                     tuple([RADIUS * k - n * 2 - k, RADIUS * k - n * 2 - k]))
+
+    def anim(self, arr, speed, counter=0, name=0, x=0, y=0):
+        obj = arr[0]
+        if counter < speed:
+            counter += 1
         else:
-            self.sc.blit(arr[counter // len(arr)], (x, y))
-        print(counter // len(arr))
-        counter += len(arr) // 3
-
+            arr.rotate()
+            counter = 0
+        self.sc.blit(obj, (0, 0))
 
         return counter
-
-
