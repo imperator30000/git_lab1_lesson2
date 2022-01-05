@@ -1,7 +1,6 @@
-import pygame
+
 from settings import *
 from ray_castting import ray_casting
-import sys
 from random import randrange
 
 
@@ -15,10 +14,12 @@ class Drawing:
                          9: pygame.image.load("images/2.png").convert()
                          }
         self.map = [[0 for g in range(len(game_map))] for i in range(len(game_map))]
+        self.map_arr = [[],[],[],[],[]]
         start = RADIUS - 3
         for i in range(7):
             for g in range(7):
                 self.map[start + i][start + g] = 1
+                self.map_arr[MAZE.check_quat(start + g, start + i)].append(tuple([start + g, start + i]))
 
     def background(self):
         # Рисуем землю и небо
@@ -60,7 +61,12 @@ class Drawing:
         x = int(x)
         y = int(y)
         x_map, y_map = 0, 0
-        self.map[int(y)][int(x)] = 1
+
+
+        if tuple([x, y]) not in self.map_arr[MAZE.check_quat(x, y)] and not MAZE.maze[y][x]:
+            self.map[int(y)][int(x)] = 1
+            if tuple([x, y]) not in MAZE.line()[-1]:
+                self.map_arr[MAZE.check_quat(x, y)].append((x, y))
         n = 15
         k = 10
         pygame.draw.rect(self.sc, (0, 0, 0),
@@ -76,9 +82,29 @@ class Drawing:
                     pass
 
         ug = 360 - ((angel - 0.5) // 1.58 + 2) % 4 * 90
-        print('===', ug)
         self.sc.blit(pygame.transform.rotate(pygame.transform.scale(pygame.image.load('img/kur.png'), (k, k)), ug),
-                     tuple([RADIUS * k - n * 2 - k, RADIUS * k - n * 2 - k]))
+                     tuple([12 * k - n * 2 - k, 12 * k - n * 2 - k]))
+
+
+
+    def minimap_clear_quat(self, num):
+        for i in range(len(self.map)):
+            for g in range(len(self.map[0])):
+                if MAZE.check_quat(g, i) == num:
+                    self.map[i][g] = 0
+
+
+    def minimap_fill_quat(self):
+        arr = []
+        for i in range(4):
+            if sorted(self.map_arr[i]) == sorted(MAZE.maze_sekt[i].road):
+                # print('ok')
+                arr.append(i)
+
+        return arr
+
+
+
 
     def anim(self, arr, speed, counter=0, name=0, x=0, y=0):
         obj = arr[0]

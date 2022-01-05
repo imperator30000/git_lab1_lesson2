@@ -1,7 +1,6 @@
 import pygame
-from settings import *
 from player import Player
-from drawing import Drawing
+from drawing import *
 
 # Основное рабочее окно
 pygame.init()
@@ -11,6 +10,8 @@ clock = pygame.time.Clock()  # Клас для определениея коли
 player = Player()  # Игрок
 drawing = Drawing(sc, clock)
 # Основной цикл программы
+# MAZE.update_sek(1)
+
 while True:
     # Проверка на закрытие программы
     for event in pygame.event.get():
@@ -28,6 +29,7 @@ while True:
     drawing.world(player.pos, player.angle)
     #minimap
     drawing.minimap(player.pos, player.angle)
+    print(drawing.minimap_fill_quat())
     # счётчик фпсD
     drawing.fps(clock)
     drawing.chek_win(player.pos)

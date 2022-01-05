@@ -105,7 +105,7 @@ class Maze:
         self.l1 = 0
         self.l2 = 0
         self.l3 = 0
-
+        self.maze_sekt_arr = [[], [], [], []]
         self.update_line()
         self.to_create()
         self.make_maze()
@@ -128,8 +128,6 @@ class Maze:
         x = 0
         y = R
         delta = 1 - 2 * R
-        ans = []
-        error = 0
         num = 9
         arr1 = [[fun(i, g) for g in range(self.size)] for i in range(self.size)]
         arr2 = [[fun(i, g) for g in range(self.size)] for i in range(self.size)]
@@ -195,7 +193,7 @@ class Maze:
         #     arr_[i // 2][arr[i][1]][arr[i][0]] = 9
 
         def fun1(arr):
-
+            ans = []
             for i in range(len(arr)):
                 try:
                     start_ = arr[i].index(9)
@@ -206,10 +204,11 @@ class Maze:
                     end_ = 0
 
                 for g in range(len(arr[i])):
-                    if arr[i][g]:
-                        ans.append((g, i))
                     if start_ >= g or g >= end_:
                         arr[i][g] = 9
+                    elif arr[i][g] in (0, 1):
+                        ans.append([g, i])
+            return ans
 
         #
         # print(*arr, sep='\n', end='\n======================================================================\n')
@@ -217,10 +216,8 @@ class Maze:
         # print(*arr2, sep='\n', end='\n======================================================================\n')
         # print(*arr3, sep='\n', end='\n======================================================================\n')
         # print(*arr4, sep='\n', end='\n======================================================================\n')
-        fun1(arr1)
-        fun1(arr2)
-        fun1(arr3)
-        fun1(arr4)
+        self.maze_sekt_arr = [fun1(arr1), fun1(arr2), fun1(arr3), fun1(arr4)]
+        # print(self.maze_sekt_arr)
 
         # print(*arr, sep='\n', end='\n======================================================================\n')
         # print(*arr1, sep='\n', end='\n======================================================================\n')
@@ -251,8 +248,15 @@ class Maze:
                           Road(koor[1], arr2),
                           Road(koor[2], arr3),
                           Road(koor[3], arr4)]
+
         for i in self.maze_sekt:
             i.to_create()
+
+        print(self.maze_sekt[0].road)
+        if (self.r, self.r - 5) not in self.maze_sekt[0].road:
+            self.maze_sekt[0].road.append((self.r, self.r - 5))
+        if (1, self.r - 1) not in self.maze_sekt[3].road:
+            self.maze_sekt[3].road.append((1, self.r - 1))
         # print(*arr, sep='\n', end='\n======================================================================\n')
         # print(*arr1, sep='\n', end='\n======================================================================\n')
         # print(*arr2, sep='\n', end='\n======================================================================\n')
@@ -262,7 +266,9 @@ class Maze:
         self.arr = arr
 
     def update_sek(self, num):
+
         self.maze_sekt[num].update()
+        self.make_maze()
 
     def make_maze(self):
         def check_pos(arr, pos):
@@ -295,7 +301,21 @@ class Maze:
         self.maze[self.l2 + 1][self.l2] = 0
         self.maze[self.l3][-self.l3 - 2] = 0
         return len(self.maze) - self.l1 - self.r % 2, self.l1 + self.r % 2, self.l2 + 1, self.l2, self.l3, len(
-            self.maze) - self.l3 - 2
+            self.maze) - self.l3 - 2, [(self.l1 + self.r % 2, len(self.maze) - self.l1 - self.r % 2),
+                                       (self.l2, self.l2 + 1), (len(self.maze) - self.l3 - 2, self.l3)]
+
+    # [(0, self.r - 1), (1, self.r - 1), (self.r, self.r - self.k),
+    #  (self.r, self.r - self.k + 1),
+    #  (self.l1 + self.r % 2, len(self.maze) - self.l1 - self.r % 2),
+    #  (self.l2, self.l2 + 1), (len(self.maze) - self.l3 - 2, self.l3)]
+
+    def check_quat(self, x, y):
+        for i in range(4):
+            if (x, y) in self.maze_sekt[i].road:
+                return i
+        return 4
+
+
 
     def info(self):
         arr = self.line()
@@ -305,8 +325,10 @@ class Maze:
         print(f'вход: x = {self.r} y = {self.r} выход: x = {0} y = {self.r}')
         print(*self.maze, sep='\n')
         print(self.maze)
-        #return (arr[1], arr[0]), (arr[3], arr[2]), (arr[5], arr[4]), (self.r, self.r), (0, self.r), self.maze
+        # return (arr[1], arr[0]), (arr[3], arr[2]), (arr[5], arr[4]), (self.r, self.r), (0, self.r), self.maze
         return (self.r, self.r), self.maze, (0, self.r)
+
+
 class Player:
     def __init__(self, x, y, size, keys):
         self.x = x
@@ -361,9 +383,10 @@ class Game:
                     sys.exit()
 
 
-# ex2 = Maze(14)  # создание объекта лабиринта с каким-то радиусом
-# ex2.make_maze()  # обновление лабиринта
-# ex2.update_sek(1)  # обновление сектора (1, 2, 3, 4 - обновление сектора под номером )  1
+ex2 = Maze(10)  # создание объекта лабиринта с каким-то радиусом
+ex2.make_maze()  # обновление лабиринта
+ex2.update_sek(1)  # обновление сектора (1, 2, 3, 4 - обновление сектора под номером )  1
+print(ex2.check_quat(9, 19))
 #####################################################################################  4 2
 #####################################################################################   3
 # ex2.update_line()  # обновление координат проходов между секторами (0 - все, 1, 2, 3)    1

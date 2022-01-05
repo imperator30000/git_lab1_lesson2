@@ -15,11 +15,13 @@ PENTA_HIGHT = 5 * HEIGHT
 # Количество кадров
 FPS = 45
 # Размер квадрата карты
-RADIUS = 12
+RADIUS = 10
 MAZE = Maze(RADIUS)
 MAZE.make_maze()
+print(MAZE.maze_sekt[1])
 MAZE.update_sek(1)
 MAZE.update_line()
+
 player_pos, game_map, win_pos = MAZE.info()
 player_pos = (player_pos[0] * 100 + 50, player_pos[1] * 100 + 50)
 win_pos = (win_pos[0] * 100, win_pos[1] * 100)
