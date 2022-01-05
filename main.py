@@ -1,7 +1,7 @@
 import pygame
-from settings import *
 from player import Player
-from drawing import Drawing
+from drawing import *
+from ray_castting import ray_casting_walls
 
 # Основное рабочее окно
 pygame.init()
@@ -11,24 +11,29 @@ clock = pygame.time.Clock()  # Клас для определениея коли
 player = Player()  # Игрок
 drawing = Drawing(sc, clock)
 # Основной цикл программы
+# MAZE.update_sek(1)
+
 while True:
     # Проверка на закрытие программы
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             exit()
 
-    player.movement()  # Ходьба
+    player.movement(drawing)  # Ходьба
+    # Обновляем экран на каждой итэрации
+    pygame.display.flip()
     # Черный фон
     sc.fill(BLACK)
     # Рисуем землю и небо
     drawing.background()
+    walls = ray_casting_walls(player, drawing.textures)
     # Рисуем стены
-    drawing.world(player.pos, player.angle)
+    drawing.world(walls)
+    # minimap
+    drawing.minimap(player.pos, player.angle)
+    # print(drawing.minimap_fill_quat())
     # счётчик фпсD
     drawing.fps(clock)
-    c = anim(anim__, sc, c)
     drawing.chek_win(player.pos)
 
-    # Обновляем экран на каждой итэрации
-    pygame.display.flip()
     clock.tick()
