@@ -8,7 +8,8 @@ ti.init(arch=ti.cuda)  # ti.cpu ti.gpu ti.vulkan ti.opengl ti.metal(macOS)
 resolution = width, height = vec2(1200, 800)
 
 # load texture
-texture = pg.transform.rotate(pg.transform.scale(pg.image.load('img/img.png'), (1024, 1024)), 90)  # texture res - 2^n x 2^n (512 x 512, 1024 x 1024, ...)
+texture = pg.transform.rotate(pg.transform.scale(pg.image.load('img/img.png'), (1024, 1024)),
+                              90)  # texture res - 2^n x 2^n (512 x 512, 1024 x 1024, ...)
 texture_size = texture.get_size()[0]
 # texture color normalization  0 - 255 --> 0.0 - 1.0
 texture_array = pg.surfarray.array3d(texture).astype(np.float32) / 255
@@ -66,6 +67,13 @@ class App:
         self.clock = pg.time.Clock()
         self.shader = PyShader(self)
 
+    def anim(self, counter, koef, end, step=5):
+        counter = koef * step + counter
+        if counter * koef >= end * koef:
+            counter = end
+            return counter, True
+        return counter, False
+
     def run(self):
         c = [0, 0, 0, 0]
         go_to_animation_zat_play = 1
@@ -75,33 +83,30 @@ class App:
         next_win = 'play'
         while True:
             if go_to_animation_zat_title == 1:
-                c[2] += 5
-                if c[2] >= 255:
+                c[2], ending = self.anim(c[2], 1, 255)
+                if ending:
                     go_to_animation_zat_title = 0
-                    c[2] = 255
 
             if go_to_animation_zat_play == 1:
-                c[0] += 5
-                if c[0] >= 255:
+                c[0], ending = self.anim(c[0], 1, 255)
+                if ending:
                     go_to_animation_zat_play = 0
-                    c[0] = 255
+
 
             elif go_to_animation_zat_play == 3:
-                c[0] -= 10
-                if c[0] <= 150:
+                c[0], ending = self.anim(c[0], -1, 150, 10)
+                if ending:
                     go_to_animation_zat_play = 0
-                    c[0] = 150
+
             if go_to_animation_zat_settings == 1:
-                c[1] += 5
-                if c[1] >= 255:
+                c[1], ending = self.anim(c[1], 1, 255)
+                if ending:
                     go_to_animation_zat_settings = 0
-                    c[1] = 255
 
             elif go_to_animation_zat_settings == 3:
-                c[1] -= 10
-                if c[1] <= 150:
+                c[1], ending = self.anim(c[1], -1, 150, 10)
+                if ending:
                     go_to_animation_zat_settings = 0
-                    c[1] = 150
             if go_to_animation_zat_settings == 2 and go_to_animation_zat_play == 2 and go_to_animation_zat_title == 2:
                 minc = min(c[:-1])
                 for i in range(3):
@@ -118,31 +123,29 @@ class App:
                 print(c)
 
             if go_to_animation_zat == 1:
-                c[3] += 5
-                if c[3] >= 255:
+                c[3], ending = self.anim(c[3], 1, 255)
+                if ending:
                     go_to_animation_zat = 0
-                    c[3] = 255
-
-
 
             if go_to_animation_zat == 0:
                 print(next_win)
 
             self.shader.run()
             # print(c, go_to_animation_zat_play, go_to_animation_zat_settings, go_to_animation_zat_title)
+            imBlack = pg.transform.scale(pg.image.load('img/black.png'), (1200, 800)).convert_alpha()
+            imTitle = pg.transform.scale(pg.image.load('img/title.png'), (500, 160)).convert_alpha()
+            imSettings = pg.transform.scale(pg.image.load('img/settings.png'), (240, 160)).convert_alpha()
             imPlay = pg.transform.scale(pg.image.load('img/play.png'), (240, 160)).convert_alpha()
+
             imPlay.fill((255, 255, 255, c[0]), special_flags=pg.BLEND_RGBA_MULT)
             self.screen.blit(imPlay, (350, 400))
 
-            imSettings = pg.transform.scale(pg.image.load('img/settings.png'), (240, 160)).convert_alpha()
             imSettings.fill((255, 255, 255, c[1]), special_flags=pg.BLEND_RGBA_MULT)
             self.screen.blit(imSettings, (610, 400))
 
-            imTitle = pg.transform.scale(pg.image.load('img/title.png'), (500, 160)).convert_alpha()
             imTitle.fill((255, 255, 255, c[2]), special_flags=pg.BLEND_RGBA_MULT)
             self.screen.blit(imTitle, (350, 220))
 
-            imBlack = pg.transform.scale(pg.image.load('img/black.png'), (1200, 800)).convert_alpha()
             imBlack.fill((255, 255, 255, c[3]), special_flags=pg.BLEND_RGBA_MULT)
             self.screen.blit(imBlack, (0, 0))
             pg.display.flip()
@@ -155,7 +158,7 @@ class App:
                         go_to_animation_zat_settings = 1
                         go_to_animation_zat_title = 1
                         go_to_animation_zat = 2
-                        c = [0,0,0,0]
+                        c = [0, 0, 0, 0]
                 if (i.type == pg.MOUSEMOTION or i.type == pg.MOUSEBUTTONDOWN) and not go_to_animation_zat_play \
                         and not go_to_animation_zat_settings \
                         and not go_to_animation_zat_title:

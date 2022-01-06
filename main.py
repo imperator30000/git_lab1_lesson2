@@ -1,6 +1,7 @@
 import pygame
 from player import Player
 from drawing import *
+from ray_castting import ray_casting_walls
 
 # Основное рабочее окно
 pygame.init()
@@ -25,14 +26,14 @@ while True:
     sc.fill(BLACK)
     # Рисуем землю и небо
     drawing.background()
+    walls = ray_casting_walls(player, drawing.textures)
     # Рисуем стены
-    drawing.world(player.pos, player.angle)
-    #minimap
+    drawing.world(walls)
+    # minimap
     drawing.minimap(player.pos, player.angle)
     print(drawing.minimap_fill_quat())
     # счётчик фпсD
     drawing.fps(clock)
     drawing.chek_win(player.pos)
 
-
-    clock.tick(FPS)
+    clock.tick()

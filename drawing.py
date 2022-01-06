@@ -1,6 +1,4 @@
-
 from settings import *
-from ray_castting import ray_casting
 from random import randrange
 
 
@@ -14,7 +12,7 @@ class Drawing:
                          9: pygame.image.load("images/2.png").convert()
                          }
         self.map = [[0 for g in range(len(game_map))] for i in range(len(game_map))]
-        self.map_arr = [[],[],[],[],[]]
+        self.map_arr = [[], [], [], [], []]
         start = RADIUS - 3
         for i in range(7):
             for g in range(7):
@@ -26,9 +24,11 @@ class Drawing:
         pygame.draw.rect(self.sc, SKYBLUE, (0, 0, WIDTH, HALF_HEIGHT))
         pygame.draw.rect(self.sc, DARKGRAY, (0, HALF_HEIGHT, WIDTH, HALF_HEIGHT))
 
-    def world(self, player_pos, player_angle):
-        # Отрисовка стен
-        ray_casting(self.sc, player_pos, player_angle, self.textures)
+    def world(self, world_objects):
+        for obj in sorted(world_objects, key=lambda n: n[0], reverse=True):
+            if obj[0]:
+                i, object, object_pos = obj
+                self.sc.blit(object, object_pos)
 
     def fps(self, clock):
         # Счётчик кадров
@@ -62,7 +62,6 @@ class Drawing:
         y = int(y)
         x_map, y_map = 0, 0
 
-
         if tuple([x, y]) not in self.map_arr[MAZE.check_quat(x, y)] and not MAZE.maze[y][x]:
             self.map[int(y)][int(x)] = 1
             if tuple([x, y]) not in MAZE.line()[-1]:
@@ -85,14 +84,11 @@ class Drawing:
         self.sc.blit(pygame.transform.rotate(pygame.transform.scale(pygame.image.load('img/kur.png'), (k, k)), ug),
                      tuple([12 * k - n * 2 - k, 12 * k - n * 2 - k]))
 
-
-
     def minimap_clear_quat(self, num):
         for i in range(len(self.map)):
             for g in range(len(self.map[0])):
                 if MAZE.check_quat(g, i) == num:
                     self.map[i][g] = 0
-
 
     def minimap_fill_quat(self):
         arr = []
@@ -103,16 +99,13 @@ class Drawing:
 
         return arr
 
-
-
-
-    def anim(self, arr, speed, counter=0, name=0, x=0, y=0):
-        obj = arr[0]
-        if counter < speed:
-            counter += 1
-        else:
-            arr.rotate()
-            counter = 0
-        self.sc.blit(obj, (0, 0))
-
-        return counter
+    # def anim(self, arr, speed, counter=0, name=0, x=0, y=0):
+    #     obj = arr[0]
+    #     if counter < speed:
+    #         counter += 1
+    #     else:
+    #         arr.rotate()
+    #         counter = 0
+    #     self.sc.blit(obj, (0, 0))
+    #
+    #     return counter

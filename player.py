@@ -45,15 +45,15 @@ class Player:
         self.y += dy
 
     def movement(self, drawing=None):
-        self.keys_control(drawing)
+        # self.keys_control(drawing)
         self.mouse_control()
         self.rect.center = self.x, self.y
 
-    # Отслеживаем нажатые клавиши и меняем значение отрибутов
-    # Движимся относительно линии взгляда
-    def keys_control(self, drawing=None):
-        global animation_hands_counter
-        self.sensitivity = 0.001
+    # # Отслеживаем нажатые клавиши и меняем значение отрибутов
+    # # Движимся относительно линии взгляда
+    # def keys_control(self, drawing=None):
+    #     global animation_hands_counter
+    #     self.sensitivity = 0.00001
 
         animation_hands = False
         sin_a = math.sin(self.angle)
@@ -78,17 +78,13 @@ class Player:
             dx = -player_speed * sin_a
             dy = player_speed * cos_a
             self.detect_collision(dx, dy)
-        if animation_hands and drawing:
-            self.sensitivity *= 5
+        # if animation_hands and drawing:
+        #     self.sensitivity *= 5
 
-            animation_hands_counter = drawing.anim(anim__, 1, animation_hands_counter)
-
+            # animation_hands_counter = drawing.anim(anim__, 1, animation_hands_counter)
 
     def mouse_control(self):
         if pygame.mouse.get_focused():
             difference = pygame.mouse.get_pos()[0] - HALF_WIDTH
             pygame.mouse.set_pos((HALF_WIDTH, HALF_HEIGHT))
             self.angle += difference * self.sensitivity
-
-
-

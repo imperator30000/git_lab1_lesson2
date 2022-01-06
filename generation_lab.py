@@ -324,7 +324,7 @@ class Maze:
         print(f'Проход между 3 и 4 сектором: x = {arr[5]} y = {arr[4]}')
         print(f'вход: x = {self.r} y = {self.r} выход: x = {0} y = {self.r}')
         print(*self.maze, sep='\n')
-        print(self.maze)
+        # print(self.maze)
         # return (arr[1], arr[0]), (arr[3], arr[2]), (arr[5], arr[4]), (self.r, self.r), (0, self.r), self.maze
         return (self.r, self.r), self.maze, (0, self.r)
 

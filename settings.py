@@ -60,11 +60,9 @@ PURPLE = (120, 0, 120)
 SKYBLUE = (0, 186, 255)
 YELLOW = (220, 220, 0)
 
-anim__ = deque([pygame.transform.scale(pygame.image.load(f'images/анимация/{i}.png'), (WIDTH, HEIGHT)) for i in range(21)])
-animation_hands = True
-animation_hands_counter = 0
-
-
-
-
-c = 0
+# anim__ = deque(
+#     [pygame.transform.scale(pygame.image.load(f'images/анимация/{i}.png'), (WIDTH, HEIGHT)) for i in range(21)])
+# animation_hands = True
+# animation_hands_counter = 0
+#
+# c = 0
