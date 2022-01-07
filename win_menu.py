@@ -4,6 +4,7 @@ import pygame as pg
 class Obj:
     def __init__(self, img, x_y, size, name, type_obj='title', text='', font_size=70, c=0, e=255, ch=True, ok=255,
                  min_max=(11, 99), fun=lambda: ''):
+
         self.img = pg.transform.scale(img, size).convert_alpha()
         self.x_y = x_y
         self.size = size
@@ -19,7 +20,7 @@ class Obj:
         self.fun = fun
         self.enabled = False
         self.font = pg.font.SysFont('inkfree', font_size)
-        self.text = self.font.render(text, True, (0, 0, 0)).convert_alpha()
+        self.text = self.font.render(text, True, (20, 20, 20)).convert_alpha()
         text_size = self.text.get_size()
         self.text_x_y = [self.x_y[i] + (self.size[i] - text_size[i]) // 2 for i in range(2)]
         self.text_ = text
@@ -56,7 +57,7 @@ class Obj:
 
         if not self.enabled:
             a = self.in_obj(x_y)
-            if a and self.type_obj in 'btn spin':
+            if a and self.type_obj in 'btn_pause spin':
                 self.go_animation(150, 5)
                 for i in self.dependent_objects:
                     if not i.enabled:
@@ -74,7 +75,8 @@ class Obj:
                     i.enabled = True
                     i.go_animation(0, 5)
 
-                self.fun()
+
+
 
             else:
 
@@ -95,12 +97,18 @@ class Obj:
             if self.counter * self.koef >= self.end_counter * self.koef:
                 self.counter = self.end_counter
                 self.changing = False
+                if self.enabled:
+                    self.recover(True)
+                    self.fun()
+
             self.text.set_alpha(self.counter)
             self.img.set_alpha(self.counter)
 
 
 class Window:
-    def __init__(self, W_H, back):
+    def __init__(self, W_H, back, name):
+        self.name = name
+
         pg.init()
         pg.font.init()
         self.sc = pg.display.set_mode(W_H)
@@ -125,6 +133,7 @@ class Window:
         self.objs['back'].dependent_objects.append(obj)
 
     def run(self):
+        print(self.name)
         while True:
 
             self.m_action = [False, False, False, False]
