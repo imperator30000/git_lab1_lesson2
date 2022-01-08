@@ -15,7 +15,7 @@ PENTA_HIGHT = 5 * HEIGHT
 # Количество кадров
 FPS = 45
 # Размер квадрата карты
-RADIUS = 10
+RADIUS = 100
 MAZE = Maze(RADIUS)
 MAZE.make_maze()
 print(MAZE.maze_sekt[1])

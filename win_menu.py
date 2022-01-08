@@ -2,7 +2,7 @@ import pygame as pg
 
 
 class Obj:
-    def __init__(self, img, x_y, size, name, type_obj='title', text='', font_size=70, c=0, e=255, ch=True, ok=255,
+    def __init__(self, img, x_y, size, name, type_obj='title', text='', font_size=70, c=255, e=255, ch=False, ok=255,
                  min_max=(11, 99), fun=lambda: ''):
 
         self.img = pg.transform.scale(img, size).convert_alpha()
@@ -25,7 +25,12 @@ class Obj:
         self.text_x_y = [self.x_y[i] + (self.size[i] - text_size[i]) // 2 for i in range(2)]
         self.text_ = text
         self.min_max = min_max
+        self.nex_win = False
         self.recover()
+
+
+
+
 
     def spin(self, x_y, step, min_, max_):
         if self.type_obj == 'spin':
@@ -83,6 +88,7 @@ class Obj:
                 self.recover(True)
 
     def go_animation(self, end, step):
+
         self.changing = True
         self.step = step
         self.end_counter = end
@@ -91,7 +97,7 @@ class Obj:
         else:
             self.koef = -1
 
-    def animation(self):
+    def animation(self, black=None):
         if self.changing:
             self.counter += self.koef * self.step
             if self.counter * self.koef >= self.end_counter * self.koef:
@@ -106,21 +112,26 @@ class Obj:
 
 
 class Window:
-    def __init__(self, W_H, back, name):
-        self.name = name
+    def __init__(self, W_H, obj):
+
 
         pg.init()
         pg.font.init()
-        self.sc = pg.display.set_mode(W_H)
-        self.objs = {'back': Obj(back, (0, 0), W_H, 'back')}
-        self.black = Obj(pg.image.load('img/black.png'), (0, 0), W_H, 'black', ch=False, ok=0, e=0)
+        self.screen = pg.display.set_mode(W_H)
+        self.objs = dict()
+        self.size = W_H
+
+        self.black = Obj(pg.image.load('img/black.png'), (0, 0), W_H, 'black', ch=True, ok=0, e=0, c=255)
         self.clock = pg.time.Clock()
         self.m_action = [False, False, False, False]  # движение нажатие
-        self.m_pos = (-1, -1)
+        self.m_pos = (-1, -2)
+        self.obj = obj(self)
+        self.back = self.obj.run
+
 
     def render(self):
-        a = [[self.sc.blit(self.objs[i].img, self.objs[i].x_y),
-              self.sc.blit(self.objs[i].text, self.objs[i].text_x_y)] for i in self.objs]
+        a = [[self.screen.blit(self.objs[i].img, self.objs[i].x_y),
+              self.screen.blit(self.objs[i].text, self.objs[i].text_x_y)] for i in self.objs]
 
     def add_obj(self, obj, dependent_objects_name=()):
         if obj.name in self.objs:
@@ -130,12 +141,22 @@ class Window:
         for i in dependent_objects_name:
             dependent_objects.append(self.objs[i])
         obj.dependent_objects = dependent_objects
-        self.objs['back'].dependent_objects.append(obj)
+
+    def restart(self):
+        for i in self.objs:
+            self.objs[i].enabled = False
+            self.objs[i].counter = 0
+            self.objs[i].go_animation(self.objs[i].ok_end, 5)
+
+            print(self.objs[i].counter, self.objs[i].name)
 
     def run(self):
-        print(self.name)
-        while True:
 
+        self.black = Obj(pg.image.load('img/black.png'), (0, 0), self.size, 'black', ch=True, ok=0, e=0, c=255)
+        self.objs['black'] = self.black
+        self.restart()
+        while True:
+            self.back()
             self.m_action = [False, False, False, False]
             for i in pg.event.get():
                 if i.type == pg.QUIT:
@@ -159,11 +180,12 @@ class Window:
                     self.m_pos = i.pos
 
             for i in self.objs:
-                self.objs[i].animation()
+                self.objs[i].animation(self.black)
                 if any(self.m_action[:2]):
                     self.objs[i].choice(self.m_pos)
                 if self.m_action[1]:
                     self.objs[i].pressed(self.m_pos, self.m_action[1])
+                    # self.maze_update()
                 if self.m_action[2]:
                     self.objs[i].spin(self.m_pos, 1, 11, 99)
                 if self.m_action[3]:

@@ -106,6 +106,6 @@ class Drawing:
     #     else:
     #         arr.rotate()
     #         counter = 0
-    #     self.sc.blit(obj, (0, 0))
+    #     self.screen.blit(obj, (0, 0))
     #
     #     return counter

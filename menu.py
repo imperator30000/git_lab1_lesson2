@@ -3,7 +3,7 @@ import numpy as np
 import taichi as ti
 import taichi_glsl as ts
 from taichi_glsl import vec2, vec3
-from pause import win_pause
+
 
 ti.init(arch=ti.cuda)  # ti.cpu ti.gpu ti.vulkan ti.opengl ti.metal(macOS)
 resolution = width, height = vec2(1200, 800)
@@ -172,7 +172,6 @@ class App:
                                 go_to_animation_zat_settings = 2
                                 go_to_animation_zat_title = 2
                                 next_win = 'play'
-                                win_pause.run()
                                 print('play')
                         else:
                             go_to_animation_zat_play = 1

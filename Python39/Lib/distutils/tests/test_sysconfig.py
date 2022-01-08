@@ -87,9 +87,9 @@ class SysconfigTestCase(support.EnvironGuard, unittest.TestCase):
             'AR': 'sc_ar',
             'CC': 'sc_cc',
             'CXX': 'sc_cxx',
-            'ARFLAGS': '--sc-arflags',
-            'CFLAGS': '--sc-cflags',
-            'CCSHARED': '--sc-ccshared',
+            'ARFLAGS': '--screen-arflags',
+            'CFLAGS': '--screen-cflags',
+            'CCSHARED': '--screen-ccshared',
             'LDSHARED': 'sc_ldshared',
             'SHLIB_SUFFIX': 'sc_shutil_suffix',
 
@@ -127,10 +127,10 @@ class SysconfigTestCase(support.EnvironGuard, unittest.TestCase):
         self.assertEqual(comp.exes['preprocessor'],
                          'env_cpp --env-cppflags')
         self.assertEqual(comp.exes['compiler'],
-                         'env_cc --sc-cflags --env-cflags --env-cppflags')
+                         'env_cc --screen-cflags --env-cflags --env-cppflags')
         self.assertEqual(comp.exes['compiler_so'],
-                         ('env_cc --sc-cflags '
-                          '--env-cflags ''--env-cppflags --sc-ccshared'))
+                         ('env_cc --screen-cflags '
+                          '--env-cflags ''--env-cppflags --screen-ccshared'))
         self.assertEqual(comp.exes['compiler_cxx'],
                          'env_cxx --env-cxx-flags')
         self.assertEqual(comp.exes['linker_exe'],
@@ -152,13 +152,13 @@ class SysconfigTestCase(support.EnvironGuard, unittest.TestCase):
 
         comp = self.customize_compiler()
         self.assertEqual(comp.exes['archiver'],
-                         'sc_ar --sc-arflags')
+                         'sc_ar --screen-arflags')
         self.assertEqual(comp.exes['preprocessor'],
                          'sc_cc -E')
         self.assertEqual(comp.exes['compiler'],
-                         'sc_cc --sc-cflags')
+                         'sc_cc --screen-cflags')
         self.assertEqual(comp.exes['compiler_so'],
-                         'sc_cc --sc-cflags --sc-ccshared')
+                         'sc_cc --screen-cflags --screen-ccshared')
         self.assertEqual(comp.exes['compiler_cxx'],
                          'sc_cxx')
         self.assertEqual(comp.exes['linker_exe'],

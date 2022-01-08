@@ -43,10 +43,10 @@ class SampleClass:
     ...
 
     Multiline example:
-    >>> sc = SampleClass(3)
+    >>> screen = SampleClass(3)
     >>> for i in range(10):
-    ...     sc = sc.double()
-    ...     print(' ', sc.get(), sep='', end='')
+    ...     screen = screen.double()
+    ...     print(' ', screen.get(), sep='', end='')
      6 12 24 48 96 192 384 768 1536 3072
     """
     def __init__(self, val):

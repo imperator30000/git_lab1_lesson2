@@ -1975,7 +1975,7 @@ html5 = {
     'sacute;': '\u015b',
     'sbquo;': '\u201a',
     'Sc;': '\u2abc',
-    'sc;': '\u227b',
+    'screen;': '\u227b',
     'scap;': '\u2ab8',
     'Scaron;': '\u0160',
     'scaron;': '\u0161',

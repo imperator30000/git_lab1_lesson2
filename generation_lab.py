@@ -32,7 +32,7 @@ class Road:
                 position = random.choice(positions)
                 pos = [(position_old[_] + position[_]) // 2 for _ in range(2)]
                 data.append(position)
-                self.road.extend([tuple(position), tuple(pos)])
+                self.road.extend([tuple(pos), tuple(position)])
                 self.maps[pos[1]][pos[0]] = self.num
                 self.maps[position[1]][position[0]] = self.num
                 n = self.check_pos(position_old)
