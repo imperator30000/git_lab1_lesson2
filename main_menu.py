@@ -1,13 +1,13 @@
 from win_menu import Obj, Window
 import pygame as pg
-# from Shader import PyShader
+from Shader import PyShader
 from maze_back import MazeBack
 
 # , pg.image.load('img/back_.png'), 'name1'
 
 
 back = MazeBack
-# back = PyShader
+back = PyShader
 win_pause = Window((1200, 800), back)
 btn_pause = Obj(pg.image.load('img/brick.png'), (310, 350), (250, 100), 'pause', 'btn', 'pause')
 btn_restart = Obj(pg.image.load('img/brick.png'), (650, 350), (250, 100), 'restart', 'btn', 'restart')
@@ -24,7 +24,7 @@ win_menu.add_obj(btn_play)
 win_menu.add_obj(btn_settings)
 win_menu.add_obj(btn_title)
 btn_restart.fun = win_menu.run
-# win_menu.run()
+
 
 
 win_castom_mode = Window((1200, 800), back)
@@ -46,7 +46,7 @@ win_castom_mode.add_obj(title_time)
 title_spin_time = Obj(pg.image.load('img/brick_.png'), (950, 500), (100, 100), 'Spin time', 'spin', '900',40,step_spin=10,
                       min_max=(100, 1000))
 win_castom_mode.add_obj(title_spin_time, ['Time update'])
-# win_castom_mode.run()
+
 
 
 
@@ -67,4 +67,4 @@ title_spin_radius = Obj(pg.image.load('img/brick_.png'), (950, 200), (100, 100),
 win_hard_mode.add_obj(title_spin_radius, ['Hard'])
 btn_play.fun = win_hard_mode.run
 
-win_hard_mode.run()
+win_menu.run()

@@ -118,7 +118,7 @@ class Window:
         self.screen = pg.display.set_mode(W_H)
         self.objs = dict()
         self.size = W_H
-
+        self.returned = dict()
         self.black = Obj(pg.image.load('img/black.png'), (0, 0), W_H, 'black', ch=True, ok=0, e=0, c=255)
         self.clock = pg.time.Clock()
         self.m_action = [False, False, False, False]  # движение нажатие
@@ -142,14 +142,11 @@ class Window:
     def restart(self):
         for i in self.objs:
             self.objs[i].enabled = False
-            if self.objs[i].counter != 255:
+            if self.objs[i].name != 'black':
                 self.objs[i].counter = 0
-                step = 5
-            else:
-                step = 5
-            self.objs[i].go_animation(self.objs[i].ok_end, step)
 
-            print(self.objs[i].counter, self.objs[i].name)
+            self.objs[i].go_animation(self.objs[i].ok_end, 5)
+
 
     def run(self):
 
@@ -187,12 +184,15 @@ class Window:
                 if self.m_action[1]:
                     pressed = self.objs[i].pressed(self.m_pos, self.m_action[1])
                     if pressed:
+                        print(self.returned)
                         self.black.ok_end = 255
 
                 if self.m_action[2]:
                     self.objs[i].spin(self.m_pos, 1)
                 if self.m_action[3]:
                     self.objs[i].spin(self.m_pos, -1)
+
+                self.returned[self.objs[i].name] = self.objs[i].text_
 
                 # print(self.m_action)
 
