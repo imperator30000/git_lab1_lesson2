@@ -30,13 +30,13 @@ class MazeBack:
                     m_pos = g
                     break
 
-        try:
+        if not fun(*m_pos) and 0 <= m_pos[0] <= (self.obj.size[0] - 60) // self.size and 0 <= m_pos[1] <= (
+                self.obj.size[1] - 60) // self.size:
             self.maze = Road(m_pos, arr)
             self.maze.to_create()
 
-        except Exception:
+        else:
             self.maze = Road([0, 0], arr)
-
             self.maze.to_create()
 
     def back(self):
@@ -44,15 +44,21 @@ class MazeBack:
         if self.counter + self.step >= len(self.maze.road):
             print('popp')
             self.step *= -1
+
         elif self.counter + self.step <= 0:
             self.step *= -1
             self.update()
 
         self.counter += self.step
         for i in range(self.counter):
-            pg.draw.rect(self.obj.screen, (25, 25, 25),
-                         (30 + self.maze.road[i][0] * self.size,
-                          30 + self.maze.road[i][1] * self.size, self.size, self.size))
+            try:
+                pg.draw.rect(self.obj.screen, (25, 25, 25),
+                             (30 + self.maze.road[i][0] * self.size,
+                              30 + self.maze.road[i][1] * self.size, self.size, self.size))
+            except Exception:
+                self.obj.m_pos = [30, 30]
+                self.update()
+                break
 
     def run(self):
         self.obj.screen.fill((150, 150, 150))
