@@ -2,7 +2,7 @@ from win_menu import Obj, Window
 import pygame as pg
 # from Shader import PyShader
 from maze_back import MazeBack
-from main import win_game
+
 
 # , pg.image.load('img/back_.png'), 'name1'
 
@@ -59,7 +59,7 @@ win_hard_mode.add_obj(title_castom_mode)
 title_hard_mode = Obj(pg.image.load('img/brick_.png'), (50, 200), (300, 100), 'Hard mode', 'title', 'Hard mode', 50,
                       ok=150)
 win_hard_mode.add_obj(title_hard_mode)
-title_play_ = Obj(pg.image.load('img/brick_.png'), (50, 350), (300, 100), 'Play', 'btn', 'Play', fun=win_game.run)
+title_play_ = Obj(pg.image.load('img/brick_.png'), (50, 350), (300, 100), 'Play', 'btn', 'Play')
 win_hard_mode.add_obj(title_play_)
 title_menu = Obj(pg.image.load('img/brick_.png'), (50, 650), (300, 100), 'Menu', 'btn', 'Menu')
 win_hard_mode.add_obj(title_menu)
@@ -70,4 +70,4 @@ title_spin_radius = Obj(pg.image.load('img/brick_.png'), (950, 200), (100, 100),
 win_hard_mode.add_obj(title_spin_radius, ['Hard'])
 btn_play.fun = win_hard_mode.run
 # запуск меню
-win_menu.run()
+

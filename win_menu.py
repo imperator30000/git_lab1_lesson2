@@ -149,6 +149,7 @@ class Window:
 
 
     def run(self):
+        pg.mouse.set_visible(True)
 
         self.black = Obj(pg.image.load('img/black.png'), (0, 0), self.size, 'black', ch=True, ok=0, e=0, c=255)
         self.objs['black'] = self.black

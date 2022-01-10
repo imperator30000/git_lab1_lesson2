@@ -1,4 +1,4 @@
-
+from main_menu import *
 from player import Player
 from drawing import *
 from ray_castting import ray_casting_walls
@@ -22,6 +22,10 @@ class Game:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     exit()
+
+            keys = pygame.key.get_pressed()
+            if keys[pygame.K_ESCAPE]:
+                win_pause.run()
 
             self.player.movement(self.drawing)  # Ходьба
             # Обновляем экран на каждой итэрации
@@ -77,3 +81,5 @@ class Game:
 #
 #     clock.tick()
 win_game = Game()
+title_play_.fun = win_game.run
+win_menu.run()
