@@ -1,18 +1,18 @@
-from main_menu import *
 from player import Player
 from drawing import *
 from ray_castting import ray_casting_walls
 
 
-
 class Game:
     def __init__(self):
         pygame.init()
+
         self.screen = pygame.display.set_mode((WIDTH, HEIGHT))
 
         self.clock = pygame.time.Clock()  # Клас для определениея количества кадров в секунду
         self.player = Player()  # Игрок
         self.drawing = Drawing(self.screen, self.clock)
+        self.fun = lambda :1
 
 
     def run(self):
@@ -25,7 +25,7 @@ class Game:
 
             keys = pygame.key.get_pressed()
             if keys[pygame.K_ESCAPE]:
-                win_pause.run()
+                self.fun()
 
             self.player.movement(self.drawing)  # Ходьба
             # Обновляем экран на каждой итэрации
@@ -80,7 +80,3 @@ class Game:
 #     drawing.chek_win(player.pos)
 #
 #     clock.tick()
-win_game = Game()
-title_play_.fun = win_game.run
-btn_pause.fun = win_game.run
-win_menu.run()

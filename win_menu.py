@@ -59,7 +59,7 @@ class Obj:
 
         if not self.enabled:
             a = self.in_obj(x_y)
-            if a and self.type_obj in 'btn_pause spin':
+            if a and self.type_obj in 'win_pause_btn_play spin':
                 self.go_animation(150, 5)
                 for i in self.dependent_objects:
                     if not i.enabled:
@@ -126,6 +126,13 @@ class Window:
         self.m_pos = (-1, -2)
         self.obj = obj(self)
         self.back = self.obj.run
+
+
+    def update_obj_fun(self, name, fun):
+        for i in self.objs:
+            if self.objs[i].name == name:
+                self.objs[i].fun = fun
+                break
 
     def render(self):
         a = [[self.screen.blit(self.objs[i].img, self.objs[i].x_y),

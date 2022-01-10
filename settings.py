@@ -1,6 +1,8 @@
 # game settings
 import math
 from generation_lab import Maze
+from Shader import PyShader
+from maze_back import MazeBack
 import pygame
 from collections import *
 
@@ -18,8 +20,6 @@ FPS = 45
 RADIUS = 100
 MAZE = Maze(RADIUS)
 MAZE.make_maze()
-print(MAZE.maze_sekt[1])
-MAZE.update_sek(1)
 MAZE.update_line()
 
 player_pos, game_map, win_pos = MAZE.info()
@@ -66,3 +66,8 @@ YELLOW = (220, 220, 0)
 # animation_hands_counter = 0
 #
 # c = 0
+
+
+# меню
+MENU_BACK_dict = {'Maze 2D': MazeBack, 'Maze 3D': PyShader}
+MENU_BACK = MENU_BACK_dict['Maze 2D']
