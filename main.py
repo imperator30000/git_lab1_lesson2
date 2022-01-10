@@ -82,4 +82,5 @@ class Game:
 #     clock.tick()
 win_game = Game()
 title_play_.fun = win_game.run
+btn_pause.fun = win_game.run
 win_menu.run()

@@ -92,7 +92,7 @@ class Obj:
         else:
             self.koef = -1
 
-    def animation(self):
+    def animation(self, obj):
         if self.changing:
             self.counter += self.koef * self.step
             if self.counter * self.koef >= self.end_counter * self.koef:
@@ -100,6 +100,7 @@ class Obj:
                 self.changing = False
                 if self.enabled:
                     self.recover(True)
+                    obj.obj.screen.fill((0, 0 ,0))
                     self.fun()
 
             self.text.set_alpha(self.counter)
@@ -179,7 +180,7 @@ class Window:
                     self.m_pos = i.pos
 
             for i in self.objs:
-                self.objs[i].animation()
+                self.objs[i].animation(self.obj)
                 if any(self.m_action[:2]):
                     self.objs[i].choice(self.m_pos)
                 if self.m_action[1]:
