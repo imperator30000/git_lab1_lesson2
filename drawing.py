@@ -1,11 +1,15 @@
 from settings import *
 from random import randrange
+import pygame
+from math import pi
 
 
 class Drawing:
-    def __init__(self, sc, clock):
+    def __init__(self, sc, clock, game_map, Maze):
         self.sc = sc
         self.clock = clock
+        self.game_map = game_map
+        self.MAZE = Maze
         self.font_win = pygame.font.SysFont("Arial", 144)
         self.font = pygame.font.SysFont("Arial", 36, bold=True)
         self.textures = {1: pygame.image.load("images/1.png").convert(),
@@ -17,7 +21,7 @@ class Drawing:
         for i in range(7):
             for g in range(7):
                 self.map[start + i][start + g] = 1
-                self.map_arr[MAZE.check_quat(start + g, start + i)].append(tuple([start + g, start + i]))
+                self.map_arr[self.MAZE.check_quat(start + g, start + i)].append(tuple([start + g, start + i]))
 
     def background(self):
         # Рисуем землю и небо
@@ -53,7 +57,8 @@ class Drawing:
         pygame.display.flip()
         self.clock.tick(15)
 
-    def minimap(self, player_pos, angel):
+    def minimap(self, player_pos, angel, m=tuple()):
+        m = list(m)
         # отрисовка миникарты
         x, y = player_pos
         x //= 100
@@ -61,11 +66,12 @@ class Drawing:
         x = int(x)
         y = int(y)
         x_map, y_map = 0, 0
-
-        if tuple([x, y]) not in self.map_arr[MAZE.check_quat(x, y)] and not MAZE.maze[y][x]:
+        if m:
+            self.map_arr[0] = m
+        if tuple([x, y]) not in self.map_arr[self.MAZE.check_quat(x, y)] and not self.MAZE.maze[y][x]:
             self.map[int(y)][int(x)] = 1
-            if tuple([x, y]) not in MAZE.line()[-1]:
-                self.map_arr[MAZE.check_quat(x, y)].append((x, y))
+            if tuple([x, y]) not in self.MAZE.line()[-1]:
+                self.map_arr[self.MAZE.check_quat(x, y)].append((x, y))
         n = 15
         k = 10
         pygame.draw.rect(self.sc, (0, 0, 0),
@@ -80,20 +86,23 @@ class Drawing:
                 except IndexError:
                     pass
 
-        ug = 360 - ((angel - 0.5) // 1.58 + 2) % 4 * 90
+        # ug = 360 - ((angel - 0.5) // (pi / 2) + 2) % 4 * 90
+        ug = - 90 - angel * 180 / pi
         self.sc.blit(pygame.transform.rotate(pygame.transform.scale(pygame.image.load('img/kur.png'), (k, k)), ug),
                      tuple([12 * k - n * 2 - k, 12 * k - n * 2 - k]))
 
     def minimap_clear_quat(self, num):
+        self.map_arr[num].clear()
         for i in range(len(self.map)):
-            for g in range(len(self.map[0])):
-                if MAZE.check_quat(g, i) == num:
+            for g in range(len(self.map[i])):
+                if self.MAZE.check_quat(g, i) == num:
                     self.map[i][g] = 0
+        print(self.map_arr)
 
     def minimap_fill_quat(self):
         arr = []
         for i in range(4):
-            if sorted(self.map_arr[i]) == sorted(MAZE.maze_sekt[i].road):
+            if sorted(self.map_arr[i]) == sorted(self.MAZE.maze_sekt[i].road):
                 # print('ok')
                 arr.append(i)
 

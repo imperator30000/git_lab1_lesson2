@@ -1,13 +1,8 @@
 # game settings
 import math
-from generation_lab import Maze
 from Shader import PyShader
 from maze_back import MazeBack
-import pygame
-from collections import *
-
 # Разрешение окна
-
 WIDTH = 1200
 HEIGHT = 800
 HALF_WIDTH = WIDTH // 2
@@ -17,14 +12,7 @@ PENTA_HIGHT = 5 * HEIGHT
 # Количество кадров
 FPS = 45
 # Размер квадрата карты
-RADIUS = 100
-MAZE = Maze(RADIUS)
-MAZE.make_maze()
-MAZE.update_line()
-
-player_pos, game_map, win_pos = MAZE.info()
-player_pos = (player_pos[0] * 100 + 50, player_pos[1] * 100 + 50)
-win_pos = (win_pos[0] * 100, win_pos[1] * 100)
+RADIUS = 11
 
 TILE = 100
 FPS_POS = (WIDTH - 65, 5)
@@ -66,8 +54,6 @@ YELLOW = (220, 220, 0)
 # animation_hands_counter = 0
 #
 # c = 0
-
-
 # меню
 MENU_BACK_dict = {'Maze 2D': MazeBack, 'Maze 3D': PyShader}
 MENU_BACK = MENU_BACK_dict['Maze 2D']

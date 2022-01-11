@@ -85,7 +85,7 @@ win_pause.add_obj(win_pause_btn_menu)
 
 # игра
 win_game = Game()
-win_game.fun = win_pause.run
+win_game.pause_run = win_pause.run
 # прикрепление функций к кнопкам
 
 win_menu.update_obj_fun('Play', win_configurable_mode.run)
