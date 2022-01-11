@@ -5,19 +5,19 @@ from math import pi
 
 
 class Drawing:
-    def __init__(self, sc, clock, game_map, Maze):
-        self.sc = sc
-        self.clock = clock
-        self.game_map = game_map
-        self.MAZE = Maze
+    def __init__(self, obj):
+        self.sc = obj.screen
+        self.clock = obj.clock
+        self.game_map = obj.game_map
+        self.MAZE = obj.MAZE
         self.font_win = pygame.font.SysFont("Arial", 144)
         self.font = pygame.font.SysFont("Arial", 36, bold=True)
         self.textures = {1: pygame.image.load("images/1.png").convert(),
                          9: pygame.image.load("images/2.png").convert()
                          }
-        self.map = [[0 for g in range(len(game_map))] for i in range(len(game_map))]
+        self.map = [[0 for g in range(len(obj.game_map))] for i in range(len(obj.game_map))]
         self.map_arr = [[], [], [], [], []]
-        start = RADIUS - 3
+        start = obj.radius - 3
         for i in range(7):
             for g in range(7):
                 self.map[start + i][start + g] = 1

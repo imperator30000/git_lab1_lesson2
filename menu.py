@@ -3,7 +3,6 @@ import pygame as pg
 from settings import *
 from main import Game
 
-
 # меню
 windows = []
 
@@ -86,17 +85,26 @@ win_pause.add_obj(win_pause_btn_menu)
 # игра
 win_game = Game()
 win_game.pause_run = win_pause.run
+
+def play():
+    win_game.new_maze(int(win_configurable_mode_spin_radius.text_))
+    win_game.run()
 # прикрепление функций к кнопкам
 
 win_menu.update_obj_fun('Play', win_configurable_mode.run)
 
 win_configurable_mode.update_obj_fun('Hard mode', win_hard_mode.run)
 win_configurable_mode.update_obj_fun('Menu', win_menu.run)
-win_configurable_mode.update_obj_fun('Play', win_game.run)
+
+
+
+
+
+win_configurable_mode.update_obj_fun('Play', play)
 
 win_hard_mode.update_obj_fun('Configurable mode', win_hard_mode.run)
 win_hard_mode.update_obj_fun('Menu', win_menu.run)
-win_hard_mode.update_obj_fun('Play', win_game.run)
+win_hard_mode.update_obj_fun('Play', play)
 # windows = [win_menu]
 # def f():
 #     global MENU_BACK
@@ -105,7 +113,7 @@ win_hard_mode.update_obj_fun('Play', win_game.run)
 #         i.obj = MENU_BACK
 #         i.back = MENU_BACK.run
 win_pause.update_obj_fun('Menu', win_menu.run)
-# win_pause.update_obj_fun('Restart', f)
+win_pause.update_obj_fun('Restart', play)
 win_pause.update_obj_fun('Play', win_game.run)
 
 win_menu.run()

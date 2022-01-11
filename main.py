@@ -8,7 +8,7 @@ from generation_lab import Maze
 
 
 class Game:
-    def __init__(self):
+    def __init__(self, radius=RADIUS):
         pygame.init()
         self.screen = pygame.display.set_mode((WIDTH, HEIGHT))
 
@@ -16,8 +16,35 @@ class Game:
         self.collision_walls = []
         self.world_map = []
         self.pause_run = lambda: 1
+        self.radius = radius
+        self.MAZE = None
 
-        self.MAZE = Maze(RADIUS)
+
+        self.player_pos, self.game_map, self.win_pos = None,None,None
+        self.win_pos = None
+
+        self.world_map, self.collision_walls, self.WORLD_WIDTH, self.WORLD_HEIGHT = None,None,None,None
+        self.player = None  # Игрок
+        self.clock = None  # Клас для определениея количества кадров в секунду
+        self.drawing = None
+        self.new_maze(self.radius)
+
+        # self.MAZE = Maze(radius)
+        #
+        # self.MAZE.make_maze()
+        #
+        # self.player_pos, self.game_map, self.win_pos = self.MAZE.info()
+        # self.player_pos = (self.player_pos[0] * 100 + 50, self.player_pos[1] * 100 + 50)
+        # self.win_pos = (self.win_pos[0] * 100, self.win_pos[1] * 100)
+        #
+        # self.world_map, self.collision_walls, self.WORLD_WIDTH, self.WORLD_HEIGHT = map.create_map(self.game_map)
+        # self.player = Player(self.player_pos)  # Игрок
+        # self.clock = pygame.time.Clock()  # Клас для определениея количества кадров в секунду
+        # self.drawing = Drawing(self)
+
+    def new_maze(self, radius):
+        self.MAZE = Maze(radius)
+        self.radius = radius
 
         self.MAZE.make_maze()
 
@@ -28,7 +55,7 @@ class Game:
         self.world_map, self.collision_walls, self.WORLD_WIDTH, self.WORLD_HEIGHT = map.create_map(self.game_map)
         self.player = Player(self.player_pos)  # Игрок
         self.clock = pygame.time.Clock()  # Клас для определениея количества кадров в секунду
-        self.drawing = Drawing(self.screen, self.clock, self.game_map, self.MAZE)
+        self.drawing = Drawing(self)
 
 
     def run(self):
