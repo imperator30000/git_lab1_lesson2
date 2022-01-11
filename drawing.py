@@ -59,7 +59,6 @@ class Drawing:
 
     def minimap(self, player_pos, angel, m=tuple()):
         quat = self.minimap_fill_quat()
-        m = list(m)
         # отрисовка миникарты
         x, y = player_pos
         x //= 100
@@ -67,8 +66,6 @@ class Drawing:
         x = int(x)
         y = int(y)
         x_map, y_map = 0, 0
-        if m:
-            self.map_arr[0] = m
         if tuple([x, y]) not in self.map_arr[self.MAZE.check_quat(x, y)] and not self.MAZE.maze[y][x]:
             self.map[int(y)][int(x)] = 1
             if tuple([x, y]) not in self.MAZE.line()[-1]:
@@ -96,6 +93,7 @@ class Drawing:
                      tuple([12 * k - n * 2 - k, 12 * k - n * 2 - k]))
 
     def minimap_clear_quat(self, num):
+        self.map_arr[num].clear()
         for i in range(len(self.map)):
             for g in range(len(self.map[i])):
                 if self.MAZE.check_quat(g, i) == num:
@@ -103,6 +101,7 @@ class Drawing:
 
     def minimap_fill_quat(self):
         arr = []
+        print(sorted(self.map_arr[0]),sorted(self.MAZE.maze_sekt[0].road), sep='\n')
         for i in range(4):
             if sorted(self.map_arr[i]) == sorted(self.MAZE.maze_sekt[i].road):
                 # print('ok')
