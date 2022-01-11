@@ -58,6 +58,7 @@ class Drawing:
         self.clock.tick(15)
 
     def minimap(self, player_pos, angel, m=tuple()):
+        quat = self.minimap_fill_quat()
         m = list(m)
         # отрисовка миникарты
         x, y = player_pos
@@ -76,12 +77,15 @@ class Drawing:
         k = 10
         pygame.draw.rect(self.sc, (0, 0, 0),
                          (x_map, y_map, (n + 2) * k, (n + 2) * k))
+
         for i in range(n):
             for g in range(n):
+                col = (100, 100, 100)
                 try:
-
                     if self.map[y + i - n // 2][x + g - n // 2] and y + i - n // 2 > 0 and x + g - n // 2 > 0:
-                        pygame.draw.rect(self.sc, (100, 100, 100),
+                        if self.MAZE.check_quat( x + g - n // 2,y + i - n // 2) in quat:
+                            col = (255, 255, 255)
+                        pygame.draw.rect(self.sc, col,
                                          (x_map + k + g * k, y_map + k + i * k, k, k))
                 except IndexError:
                     pass
@@ -92,12 +96,10 @@ class Drawing:
                      tuple([12 * k - n * 2 - k, 12 * k - n * 2 - k]))
 
     def minimap_clear_quat(self, num):
-        self.map_arr[num].clear()
         for i in range(len(self.map)):
             for g in range(len(self.map[i])):
                 if self.MAZE.check_quat(g, i) == num:
                     self.map[i][g] = 0
-        print(self.map_arr)
 
     def minimap_fill_quat(self):
         arr = []

@@ -99,7 +99,6 @@ class Game:
         self.player_pos, self.game_map, self.win_pos = self.MAZE.info()
         self.player_pos = (self.player_pos[0] * 100 + 50, self.player_pos[1] * 100 + 50)
         self.win_pos = (self.win_pos[0] * 100, self.win_pos[1] * 100)
-
         self.world_map, self.collision_walls, self.WORLD_WIDTH, self.WORLD_HEIGHT = map.create_map(self.game_map)
         self.player = Player(self.player_pos)  # Игрок
         self.clock = pygame.time.Clock()  # Клас для определениея количества кадров в секунду

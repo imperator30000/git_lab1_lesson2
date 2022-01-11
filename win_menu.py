@@ -38,7 +38,7 @@ class Obj:
                 self.text = self.font.render(self.text_, True, (0, 0, 0)).convert_alpha()
                 self.text_x_y = [self.x_y[i] + (self.size[i] - self.text.get_size()[i]) // 2 for i in range(2)]
                 self.text.set_alpha(self.counter)
-            print(text_)
+
 
     def in_obj(self, x_y):
         a = [self.x_y[g] <= x_y[g] <= self.x_y[g] + self.size[g] for g in range(2)]
@@ -100,7 +100,7 @@ class Obj:
                 self.changing = False
                 if self.enabled:
                     self.recover(True)
-                    obj.obj.screen.fill((0, 0 ,0))
+                    obj.screen.fill((0, 0 ,0))
                     self.fun()
 
             self.text.set_alpha(self.counter)
@@ -179,7 +179,6 @@ class Window:
                     if i.button == 5:
                         self.m_action[3] = True
 
-                    print(i.button)
                     self.m_pos = i.pos
 
                 if i.type == pg.MOUSEMOTION:
@@ -187,13 +186,12 @@ class Window:
                     self.m_pos = i.pos
 
             for i in self.objs:
-                self.objs[i].animation(self.obj)
+                self.objs[i].animation(self)
                 if any(self.m_action[:2]):
                     self.objs[i].choice(self.m_pos)
                 if self.m_action[1]:
                     pressed = self.objs[i].pressed(self.m_pos, self.m_action[1])
                     if pressed:
-                        print(self.returned)
                         self.black.ok_end = 255
 
                 if self.m_action[2]:

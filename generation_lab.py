@@ -252,7 +252,6 @@ class Maze:
         for i in self.maze_sekt:
             i.to_create()
 
-        print(self.maze_sekt[0].road)
         if (self.r, self.r - 5) not in self.maze_sekt[0].road:
             self.maze_sekt[0].road.append((self.r, self.r - 5))
         if (1, self.r - 1) not in self.maze_sekt[3].road:
@@ -309,7 +308,7 @@ class Maze:
     #  (self.l1 + self.r % 2, len(self.maze) - self.l1 - self.r % 2),
     #  (self.l2, self.l2 + 1), (len(self.maze) - self.l3 - 2, self.l3)]
 
-    def check_quat(self, x, y):
+    def check_quat(self, x=0, y=0):
         if x == self.r and y in (self.r - self.k, self.r - self.k + 1):
             return 0
         for i in range(4):
