@@ -1,14 +1,40 @@
-from win_menu import Obj, Window
+from win_menu import Obj, Window, InputBox
 import pygame as pg
 from settings import *
 from main import Game
 
-# меню
-windows = []
+# регистрация/вход
+win_login = Window((1200, 800), MENU_BACK)
+win_login_input_login = InputBox(pg.image.load('img/brick_.png'), (80, 480), (500, 80), 'Login_input', 'btn',
+                                 font_size=30)
+win_login_input_password = InputBox(pg.image.load('img/brick_.png'), (620, 480), (500, 80), 'Password_input', 'btn',
+                                    font_size=30)
+win_login_title_maze = Obj(pg.image.load('img/brick_.png'), (310, 80), (590, 200), 'Maze', 'title', 'Maze', 100)
+win_login_title_password = Obj(pg.image.load('img/brick_.png'), (620, 360), (500, 80), 'Password', 'title', 'Password')
+win_login_title_login = Obj(pg.image.load('img/brick_.png'), (80, 360), (500, 80), 'login', 'title', 'login')
+win_login_btn_play = Obj(pg.image.load('img/brick_.png'), (450, 640), (300, 80), 'Play', 'btn', 'Play')
 
+win_login.add_obj(win_login_input_login)
+win_login.add_obj(win_login_input_password)
+win_login.add_obj(win_login_title_maze)
+win_login.add_obj(win_login_title_password)
+win_login.add_obj(win_login_title_login)
+win_login.add_obj(win_login_btn_play)
+
+# неверный пароль
+win_invalid_password = Window((1200, 800), MENU_BACK)
+
+win_invalid_password_title = Obj(pg.image.load('img/brick_.png'), (100, 80), (1000, 100), 'Invalid password', 'title',
+                                 'An invalid password or an account with such a login exists', font_size=35)
+win_invalid_password_btn_menu = Obj(pg.image.load('img/brick_.png'), (450, 640), (300, 80), 'Back', 'btn', 'Back')
+
+win_invalid_password.add_obj(win_invalid_password_title)
+win_invalid_password.add_obj(win_invalid_password_btn_menu)
+
+# меню
 win_menu = Window((1200, 800), MENU_BACK)
 
-win_menu_btn_play = Obj(pg.image.load('img/brick_.png'), (310, 450), (270, 100), 'Play', 'btn', 'Play', )
+win_menu_btn_play = Obj(pg.image.load('img/brick_.png'), (310, 450), (270, 100), 'Play', 'btn', 'Play')
 win_menu_btn_settings = Obj(pg.image.load('img/brick_.png'), (630, 450), (270, 100), 'settings', 'btn', 'settings', 60)
 win_menu_title_title = Obj(pg.image.load('img/brick_.png'), (310, 210), (590, 200), 'Maze', 'title', 'Maze', 100)
 
@@ -86,19 +112,29 @@ win_pause.add_obj(win_pause_btn_menu)
 win_game = Game()
 win_game.pause_run = win_pause.run
 
+
 def play():
     win_game.new_maze(int(win_configurable_mode_spin_radius.text_))
     win_game.run()
+
+
+def logining():
+    if 0:
+        return win_invalid_password.run
+    return win_menu.run
+
+
 # прикрепление функций к кнопкам
+
+
+win_login.update_obj_fun('Play', logining())
+
+win_invalid_password.update_obj_fun('Back', win_login.run)
 
 win_menu.update_obj_fun('Play', win_configurable_mode.run)
 
 win_configurable_mode.update_obj_fun('Hard mode', win_hard_mode.run)
 win_configurable_mode.update_obj_fun('Menu', win_menu.run)
-
-
-
-
 
 win_configurable_mode.update_obj_fun('Play', play)
 
@@ -116,4 +152,4 @@ win_pause.update_obj_fun('Menu', win_menu.run)
 win_pause.update_obj_fun('Restart', play)
 win_pause.update_obj_fun('Play', win_game.run)
 
-win_menu.run()
+win_login.run()

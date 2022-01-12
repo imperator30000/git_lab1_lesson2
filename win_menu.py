@@ -3,7 +3,11 @@ import pygame as pg
 
 class Obj:
     def __init__(self, img, x_y, size, name, type_obj='title', text='', font_size=70, c=255, e=255, ch=False, ok=255,
-                 min_max=(11, 99), fun=lambda: '', step_spin=1):
+                 min_max=(11, 99), fun=lambda: '', step_spin=1, go_next_win=True):
+
+        self.curs = 0
+        self.active = False
+        self.rect = pg.Rect(*x_y, *size)
 
         self.img = pg.transform.scale(img, size).convert_alpha()
         self.x_y = x_y
@@ -19,6 +23,7 @@ class Obj:
         self.dependent_objects = []
         self.fun = fun
         self.enabled = False
+        self.font_size = font_size
         self.font = pg.font.SysFont('inkfree', font_size)
         self.text = self.font.render(text, True, (20, 20, 20)).convert_alpha()
         text_size = self.text.get_size()
@@ -27,6 +32,7 @@ class Obj:
         self.min_max = min_max
         self.nex_win = False
         self.step_spin = step_spin
+        self.go_next_win = go_next_win
         self.recover()
 
     def spin(self, x_y, k):
@@ -38,7 +44,6 @@ class Obj:
                 self.text = self.font.render(self.text_, True, (0, 0, 0)).convert_alpha()
                 self.text_x_y = [self.x_y[i] + (self.size[i] - self.text.get_size()[i]) // 2 for i in range(2)]
                 self.text.set_alpha(self.counter)
-
 
     def in_obj(self, x_y):
         a = [self.x_y[g] <= x_y[g] <= self.x_y[g] + self.size[g] for g in range(2)]
@@ -100,15 +105,56 @@ class Obj:
                 self.changing = False
                 if self.enabled:
                     self.recover(True)
-                    obj.screen.fill((0, 0 ,0))
+                    if self.go_next_win:
+                        obj.screen.fill((0, 0, 0))
                     self.fun()
 
             self.text.set_alpha(self.counter)
             self.img.set_alpha(self.counter)
 
+    def input_txt(self, sim):
+        pass
 
 
+class InputBox(Obj):
+    def pressed(self, x_y, pressed):
+        # if self.in_obj(x_y) and pressed:
+        #     if self.active:
+        #         self.go_animation(255, 5)
+        #     else:
+        #         self.go_animation(150, 5)
+        #     self.active = not self.active
+        pass
 
+    def input_txt(self, sim):
+        self.curs += 1
+        if self.active:
+            if sim != 'backspace':
+                self.text_ += sim
+            else:
+                self.text_ = self.text_[:-1]
+
+            self.text = self.font.render(self.text_, True, (0, 0, 0)).convert_alpha()
+            if self.text.get_size()[0] > self.size[0] - self.font_size // 2:
+                self.text_ = self.text_[:-1]
+            self.text = self.font.render(self.text_, True, (0, 0, 0)).convert_alpha()
+            self.text_x_y = [self.x_y[i] + (self.size[i] - self.text.get_size()[i]) // 2 for i in range(2)]
+
+    def choice(self, x_y):
+        self.active = False
+        self.recover()
+        if self.in_obj(x_y):
+            self.go_animation(150, 5)
+            self.active = True
+        else:
+            self.text = self.font.render(self.text_, True, (0, 0, 0)).convert_alpha()
+            self.text_x_y = [self.x_y[i] + (self.size[i] - self.text.get_size()[i]) // 2 for i in range(2)]
+
+    def recover(self, pressed=False):
+        self.go_animation(self.ok_end, 5)
+        for i in self.dependent_objects:
+            if not i.changing:
+                i.go_animation(self.ok_end, 5)
 
 
 class Window:
@@ -126,7 +172,6 @@ class Window:
         self.m_pos = (-1, -2)
         self.obj = obj(self)
         self.back = self.obj.run
-
 
     def update_obj_fun(self, name, fun):
         for i in self.objs:
@@ -155,7 +200,6 @@ class Window:
 
             self.objs[i].go_animation(self.objs[i].ok_end, 5)
 
-
     def run(self):
         pg.mouse.set_visible(True)
 
@@ -163,11 +207,17 @@ class Window:
         self.objs['black'] = self.black
         self.restart()
         while True:
+            sim = ''
             self.back()
             self.m_action = [False, False, False, False]
             for i in pg.event.get():
                 if i.type == pg.QUIT:
                     exit()
+                if i.type == pg.KEYDOWN:
+                    if i.key == pg.K_BACKSPACE:
+                        sim = 'backspace'
+                    else:
+                        sim = i.unicode
 
                 if i.type == pg.MOUSEBUTTONDOWN:
                     if i.button == 1:
@@ -187,11 +237,12 @@ class Window:
 
             for i in self.objs:
                 self.objs[i].animation(self)
+                self.objs[i].input_txt(sim)
                 if any(self.m_action[:2]):
                     self.objs[i].choice(self.m_pos)
                 if self.m_action[1]:
                     pressed = self.objs[i].pressed(self.m_pos, self.m_action[1])
-                    if pressed:
+                    if pressed and self.objs[i].go_next_win:
                         self.black.ok_end = 255
 
                 if self.m_action[2]:
