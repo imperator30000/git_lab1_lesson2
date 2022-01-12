@@ -1,198 +1,155 @@
+from win_menu import Obj, Window, InputBox
 import pygame as pg
-import numpy as np
-import taichi as ti
-import taichi_glsl as ts
-from taichi_glsl import vec2, vec3
+from settings import *
+from main import Game
+
+# регистрация/вход
+win_login = Window((1200, 800), MENU_BACK)
+win_login_input_login = InputBox(pg.image.load('img/brick_.png'), (80, 480), (500, 80), 'Login_input', 'btn',
+                                 font_size=30)
+win_login_input_password = InputBox(pg.image.load('img/brick_.png'), (620, 480), (500, 80), 'Password_input', 'btn',
+                                    font_size=30)
+win_login_title_maze = Obj(pg.image.load('img/brick_.png'), (310, 80), (590, 200), 'Maze', 'title', 'Maze', 100)
+win_login_title_password = Obj(pg.image.load('img/brick_.png'), (620, 360), (500, 80), 'Password', 'title', 'Password')
+win_login_title_login = Obj(pg.image.load('img/brick_.png'), (80, 360), (500, 80), 'login', 'title', 'login')
+win_login_btn_play = Obj(pg.image.load('img/brick_.png'), (450, 640), (300, 80), 'Play', 'btn', 'Play')
+
+win_login.add_obj(win_login_input_login)
+win_login.add_obj(win_login_input_password)
+win_login.add_obj(win_login_title_maze)
+win_login.add_obj(win_login_title_password)
+win_login.add_obj(win_login_title_login)
+win_login.add_obj(win_login_btn_play)
+
+# неверный пароль
+win_invalid_password = Window((1200, 800), MENU_BACK)
+
+win_invalid_password_title = Obj(pg.image.load('img/brick_.png'), (100, 80), (1000, 100), 'Invalid password', 'title',
+                                 'An invalid password or an account with such a login exists', font_size=35)
+win_invalid_password_btn_menu = Obj(pg.image.load('img/brick_.png'), (450, 640), (300, 80), 'Back', 'btn', 'Back')
+
+win_invalid_password.add_obj(win_invalid_password_title)
+win_invalid_password.add_obj(win_invalid_password_btn_menu)
+
+# меню
+win_menu = Window((1200, 800), MENU_BACK)
+
+win_menu_btn_play = Obj(pg.image.load('img/brick_.png'), (310, 450), (270, 100), 'Play', 'btn', 'Play')
+win_menu_btn_settings = Obj(pg.image.load('img/brick_.png'), (630, 450), (270, 100), 'settings', 'btn', 'settings', 60)
+win_menu_title_title = Obj(pg.image.load('img/brick_.png'), (310, 210), (590, 200), 'Maze', 'title', 'Maze', 100)
+
+win_menu.add_obj(win_menu_btn_play)
+win_menu.add_obj(win_menu_btn_settings)
+win_menu.add_obj(win_menu_title_title)
+
+# кастомный режим
+win_configurable_mode = Window((1200, 800), MENU_BACK)
+
+win_configurable_mode_title_configurable_mode = Obj(pg.image.load('img/brick_.png'), (50, 50), (300, 100),
+                                                    'Configurable mode', 'title',
+                                                    'Configurable mode',
+                                                    35, ok=150)
+win_configurable_mode_btn_hard_mode = Obj(pg.image.load('img/brick_.png'), (50, 200), (300, 100), 'Hard mode', 'btn',
+                                          'Hard mode', 50)
+win_configurable_mode_btn_play = Obj(pg.image.load('img/brick_.png'), (50, 350), (300, 100), 'Play', 'btn', 'Play')
+win_configurable_mode_btn_menu = Obj(pg.image.load('img/brick_.png'), (50, 650), (300, 100), 'Menu', 'btn', 'Menu')
+win_configurable_mode_title_radius = Obj(pg.image.load('img/brick_.png'), (850, 50), (300, 100), 'Radius', 'title',
+                                         'Radius')
+win_configurable_mode_spin_radius = Obj(pg.image.load('img/brick_.png'), (950, 200), (100, 100), 'Spin radius', 'spin',
+                                        '11')
+win_configurable_mode_title_time = Obj(pg.image.load('img/brick_.png'), (850, 350), (300, 100), 'Time update', 'title',
+                                       'Time update', 50)
+win_configurable_mode_spin_time = Obj(pg.image.load('img/brick_.png'), (950, 500), (100, 100), 'Spin time', 'spin',
+                                      '900', 40,
+                                      step_spin=10,
+                                      min_max=(100, 1000))
+
+win_configurable_mode.add_obj(win_configurable_mode_title_configurable_mode)
+win_configurable_mode.add_obj(win_configurable_mode_btn_hard_mode)
+win_configurable_mode.add_obj(win_configurable_mode_btn_play)
+win_configurable_mode.add_obj(win_configurable_mode_btn_menu)
+win_configurable_mode.add_obj(win_configurable_mode_title_radius)
+win_configurable_mode.add_obj(win_configurable_mode_spin_radius, ['Radius'])
+win_configurable_mode.add_obj(win_configurable_mode_title_time)
+win_configurable_mode.add_obj(win_configurable_mode_spin_time, ['Time update'])
+
+# сложность
+win_hard_mode = Window((1200, 800), MENU_BACK)
+
+win_hard_mode_btn_castom_mode = Obj(pg.image.load('img/brick_.png'), (50, 50), (300, 100), 'Configurable mode', 'btn',
+                                    'Configurable mode',
+                                    35, fun=win_configurable_mode.run)
+win_hard_mode_title_hard_mode = Obj(pg.image.load('img/brick_.png'), (50, 200), (300, 100), 'Hard mode', 'title',
+                                    'Hard mode', 50,
+                                    ok=150)
+win_hard_mode_btn_play_ = Obj(pg.image.load('img/brick_.png'), (50, 350), (300, 100), 'Play', 'btn', 'Play')
+win_hard_mode_btn_menu = Obj(pg.image.load('img/brick_.png'), (50, 650), (300, 100), 'Menu', 'btn', 'Menu')
+win_hard_mode_title_radius = Obj(pg.image.load('img/brick_.png'), (850, 50), (300, 100), 'Hard', 'title', 'Hard')
+win_hard_mode_spin_radius = Obj(pg.image.load('img/brick_.png'), (950, 200), (100, 100), 'Spin hard', 'spin', '1',
+                                min_max=(1, 20))
+
+win_hard_mode.add_obj(win_hard_mode_btn_castom_mode)
+win_hard_mode.add_obj(win_hard_mode_title_hard_mode)
+win_hard_mode.add_obj(win_hard_mode_btn_play_)
+win_hard_mode.add_obj(win_hard_mode_btn_menu)
+win_hard_mode.add_obj(win_hard_mode_title_radius)
+win_hard_mode.add_obj(win_hard_mode_spin_radius, ['Hard'])
+
+# пауза
+win_pause = Window((1200, 800), MENU_BACK)
+
+win_pause_btn_play = Obj(pg.image.load('img/brick_.png'), (120, 350), (240, 100), 'Play', 'btn', 'Play')
+win_pause_btn_restart = Obj(pg.image.load('img/brick_.png'), (480, 350), (240, 100), 'Restart', 'btn', 'Restart')
+win_pause_btn_menu = Obj(pg.image.load('img/brick_.png'), (840, 350), (240, 100), 'Menu', 'btn', 'Menu')
+
+win_pause.add_obj(win_pause_btn_play)
+win_pause.add_obj(win_pause_btn_restart)
+win_pause.add_obj(win_pause_btn_menu)
+
+# win_pause.run()
+
+# игра
+win_game = Game()
+win_game.pause_run = win_pause.run
 
 
-ti.init(arch=ti.cuda)  # ti.cpu ti.gpu ti.vulkan ti.opengl ti.metal(macOS)
-resolution = width, height = vec2(1200, 800)
-
-# load texture
-texture = pg.transform.rotate(pg.transform.scale(pg.image.load('img/img.png'), (1024, 1024)),
-                              90)  # texture res - 2^n x 2^n (512 x 512, 1024 x 1024, ...)
-texture_size = texture.get_size()[0]
-# texture color normalization  0 - 255 --> 0.0 - 1.0
-texture_array = pg.surfarray.array3d(texture).astype(np.float32) / 255
-koef = 1
+def play():
+    win_game.new_maze(int(win_configurable_mode_spin_radius.text_))
+    win_game.run()
 
 
-@ti.data_oriented
-class PyShader:
-    def __init__(self, app):
-        self.app = app
-        self.screen_array = np.full((width, height, 3), [0, 0, 0], np.uint8)
-        # taichi fields
-        self.screen_field = ti.Vector.field(3, ti.uint8, (width, height))
-        self.texture_field = ti.Vector.field(3, ti.float32, texture.get_size())
-        self.texture_field.from_numpy(texture_array)
-
-    @ti.kernel
-    def render(self, time: ti.float32):
-        """fragment shader imitation"""
-        for frag_coord in ti.grouped(self.screen_field):
-            # normalized pixel coords
-            uv = (frag_coord - 0.5 * resolution) / resolution.y
-            col = vec3(0.0)
-
-            # polar coords
-            phi = ts.atan(uv.y, uv.x)
-            # rho = ts.length(uv)
-            rho = pow(pow(uv.x ** 2, 10) + pow(uv.y ** 2, 100), 0.15)
-            st = vec2(phi / ts.pi * 2, 0.25 / rho)
-            st.x += 0
-            st.y += time / 8
-            col += self.texture_field[st * texture_size]
-
-            col *= rho + 0.00001
-            # col += 0.1 / rho * vec3(0.1, 0.1, 0.4)
-            col = ts.clamp(col, 0.0, 1.0)
-            self.screen_field[frag_coord.x, resolution.y - frag_coord.y] = col * 255
-
-    def update(self):
-        time = pg.time.get_ticks() * 0.001  # time in sec
-        self.render(time)
-        self.screen_array = self.screen_field.to_numpy()
-
-    def draw(self):
-        pg.surfarray.blit_array(self.app.screen, self.screen_array)
-
-    def run(self):
-        self.update()
-        self.draw()
+def logining():
+    if 0:
+        return win_invalid_password.run
+    return win_menu.run
 
 
-class App:
-    def __init__(self):
-        self.screen = pg.display.set_mode(resolution, pg.SCALED)
-        self.clock = pg.time.Clock()
-        self.shader = PyShader(self)
-
-    def anim(self, counter, koef, end, step=5):
-        counter = koef * step + counter
-        if counter * koef >= end * koef:
-            counter = end
-            return counter, True
-        return counter, False
-
-    def run(self):
-        c = [0, 0, 0, 0]
-        go_to_animation_zat_play = 1
-        go_to_animation_zat_settings = 1
-        go_to_animation_zat_title = 1
-        go_to_animation_zat = 2
-        next_win = 'play'
-        while True:
-            if go_to_animation_zat_title == 1:
-                c[2], ending = self.anim(c[2], 1, 255)
-                if ending:
-                    go_to_animation_zat_title = 0
-
-            if go_to_animation_zat_play == 1:
-                c[0], ending = self.anim(c[0], 1, 255)
-                if ending:
-                    go_to_animation_zat_play = 0
+# прикрепление функций к кнопкам
 
 
-            elif go_to_animation_zat_play == 3:
-                c[0], ending = self.anim(c[0], -1, 150, 10)
-                if ending:
-                    go_to_animation_zat_play = 0
+win_login.update_obj_fun('Play', logining())
 
-            if go_to_animation_zat_settings == 1:
-                c[1], ending = self.anim(c[1], 1, 255)
-                if ending:
-                    go_to_animation_zat_settings = 0
+win_invalid_password.update_obj_fun('Back', win_login.run)
 
-            elif go_to_animation_zat_settings == 3:
-                c[1], ending = self.anim(c[1], -1, 150, 10)
-                if ending:
-                    go_to_animation_zat_settings = 0
-            if go_to_animation_zat_settings == 2 and go_to_animation_zat_play == 2 and go_to_animation_zat_title == 2:
-                minc = min(c[:-1])
-                for i in range(3):
-                    if c[i] != minc:
-                        c[i] -= 5
-                print(c)
-                c3 = c[3]
-                if c[0] == c[1] == c[2] >= 5:
-                    c = [i - 5 for i in c[:-1]]
-                    c.append(c3)
-                else:
-                    go_to_animation_zat = 1
+win_menu.update_obj_fun('Play', win_configurable_mode.run)
 
-                print(c)
+win_configurable_mode.update_obj_fun('Hard mode', win_hard_mode.run)
+win_configurable_mode.update_obj_fun('Menu', win_menu.run)
 
-            if go_to_animation_zat == 1:
-                c[3], ending = self.anim(c[3], 1, 255)
-                if ending:
-                    go_to_animation_zat = 0
+win_configurable_mode.update_obj_fun('Play', play)
 
-            if go_to_animation_zat == 0:
-                print(next_win)
+win_hard_mode.update_obj_fun('Configurable mode', win_hard_mode.run)
+win_hard_mode.update_obj_fun('Menu', win_menu.run)
+win_hard_mode.update_obj_fun('Play', play)
+# windows = [win_menu]
+# def f():
+#     global MENU_BACK
+#     MENU_BACK = MENU_BACK_dict['Maze 3D']
+#     for i in windows:
+#         i.obj = MENU_BACK
+#         i.back = MENU_BACK.run
+win_pause.update_obj_fun('Menu', win_menu.run)
+win_pause.update_obj_fun('Restart', play)
+win_pause.update_obj_fun('Play', win_game.run)
 
-            self.shader.run()
-            # print(c, go_to_animation_zat_play, go_to_animation_zat_settings, go_to_animation_zat_title)
-            imBlack = pg.transform.scale(pg.image.load('img/black.png'), (1200, 800)).convert_alpha()
-            imTitle = pg.transform.scale(pg.image.load('img/title.png'), (500, 160)).convert_alpha()
-            imSettings = pg.transform.scale(pg.image.load('img/settings.png'), (240, 160)).convert_alpha()
-            imPlay = pg.transform.scale(pg.image.load('img/play.png'), (240, 160)).convert_alpha()
-
-            imPlay.fill((255, 255, 255, c[0]), special_flags=pg.BLEND_RGBA_MULT)
-            self.screen.blit(imPlay, (350, 400))
-
-            imSettings.fill((255, 255, 255, c[1]), special_flags=pg.BLEND_RGBA_MULT)
-            self.screen.blit(imSettings, (610, 400))
-
-            imTitle.fill((255, 255, 255, c[2]), special_flags=pg.BLEND_RGBA_MULT)
-            self.screen.blit(imTitle, (350, 220))
-
-            imBlack.fill((255, 255, 255, c[3]), special_flags=pg.BLEND_RGBA_MULT)
-            self.screen.blit(imBlack, (0, 0))
-            pg.display.flip()
-            for i in pg.event.get():
-                if i.type == pg.QUIT:
-                    exit()
-                if i.type == pg.MOUSEBUTTONDOWN:
-                    if i.button == 3:
-                        go_to_animation_zat_play = 1
-                        go_to_animation_zat_settings = 1
-                        go_to_animation_zat_title = 1
-                        go_to_animation_zat = 2
-                        c = [0, 0, 0, 0]
-                if (i.type == pg.MOUSEMOTION or i.type == pg.MOUSEBUTTONDOWN) and not go_to_animation_zat_play \
-                        and not go_to_animation_zat_settings \
-                        and not go_to_animation_zat_title:
-                    if c[2]:
-                        if 350 <= i.pos[0] <= 590 and 400 <= i.pos[1] <= 560:
-                            if go_to_animation_zat_play == 0:
-                                go_to_animation_zat_play = 3
-                            if i.type == pg.MOUSEBUTTONDOWN and i.button == 1:
-                                go_to_animation_zat_play = 2
-                                go_to_animation_zat_settings = 2
-                                go_to_animation_zat_title = 2
-                                next_win = 'play'
-                                print('play')
-                        else:
-                            go_to_animation_zat_play = 1
-
-                        if 610 <= i.pos[0] <= 850 and 400 <= i.pos[1] <= 560:
-                            if go_to_animation_zat_settings == 0:
-                                go_to_animation_zat_settings = 3
-                            if i.type == pg.MOUSEBUTTONDOWN and i.button == 1:
-                                go_to_animation_zat_play = 2
-                                go_to_animation_zat_settings = 2
-                                go_to_animation_zat_title = 2
-                                next_win = 'settings'
-                                print('settings')
-
-                        else:
-                            if go_to_animation_zat_settings == 0:
-                                go_to_animation_zat_settings = 1
-
-            self.clock.tick(120)
-
-
-if __name__ == '__main__':
-    app = App()
-    app.run()
+win_login.run()
