@@ -2,6 +2,9 @@
 import math
 from Shader import PyShader
 from maze_back import MazeBack
+import pygame as pg
+
+pg.mixer.init(channels=2)
 # Разрешение окна
 WIDTH = 1200
 HEIGHT = 800
@@ -57,3 +60,7 @@ YELLOW = (220, 220, 0)
 # меню
 MENU_BACK_dict = {'Maze 2D': MazeBack, 'Maze 3D': PyShader}
 MENU_BACK = MENU_BACK_dict['Maze 2D']
+VOLUME = [1, 1, 1]
+BACK_MUZ = pg.mixer.Sound('back_mus.wav')
+CLICK_SOUND = pg.mixer.Sound("click.wav")
+BACK_MUZ.set_volume(VOLUME[0])

@@ -1,5 +1,4 @@
 import map
-from main_menu import *
 from player import Player
 from drawing import *
 from ray_castting import ray_casting_walls
