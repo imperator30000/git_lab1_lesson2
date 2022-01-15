@@ -1,3 +1,4 @@
+import datetime
 import map
 from player import Player
 from drawing import *
@@ -10,7 +11,6 @@ class Game:
     def __init__(self, radius=RADIUS):
         pygame.init()
         self.screen = pygame.display.set_mode((WIDTH, HEIGHT))
-
         self.save_minimap_setting = []
         self.collision_walls = []
         self.world_map = []
@@ -18,11 +18,10 @@ class Game:
         self.radius = radius
         self.MAZE = None
 
-
-        self.player_pos, self.game_map, self.win_pos = None,None,None
+        self.player_pos, self.game_map, self.win_pos = None, None, None
         self.win_pos = None
 
-        self.world_map, self.collision_walls, self.WORLD_WIDTH, self.WORLD_HEIGHT = None,None,None,None
+        self.world_map, self.collision_walls, self.WORLD_WIDTH, self.WORLD_HEIGHT = None, None, None, None
         self.player = None  # Игрок
         self.clock = None  # Клас для определениея количества кадров в секунду
         self.drawing = None
@@ -56,8 +55,8 @@ class Game:
         self.clock = pygame.time.Clock()  # Клас для определениея количества кадров в секунду
         self.drawing = Drawing(self)
 
-
     def run(self):
+        now = datetime.datetime.now()
         pygame.mouse.set_visible(False)
         while True:
             # Проверка на закрытие программы
@@ -87,7 +86,7 @@ class Game:
             # print(self.drawing.minimap_fill_quat())
             # счётчик фпсD
             self.drawing.fps(self.clock)
-            self.drawing.chek_win(self.player.pos)
+            self.drawing.chek_win(self.player.pos, now)
             if keys[pygame.K_m]:
                 self.all_update()
             self.clock.tick()

@@ -2,18 +2,20 @@ from settings import *
 from random import randrange
 import pygame
 from math import pi
+import datetime
 
 
 class Drawing:
     def __init__(self, obj):
+        self.flag = True
         self.sc = obj.screen
         self.clock = obj.clock
         self.game_map = obj.game_map
         self.MAZE = obj.MAZE
         self.font_win = pygame.font.SysFont("Arial", 144)
         self.font = pygame.font.SysFont("Arial", 36, bold=True)
-        self.textures = {1: pygame.image.load("images/1.png").convert(),
-                         9: pygame.image.load("images/2.png").convert()
+        self.textures = {1: SELECTED_TEXTURES[0].convert(),
+                         9: SELECTED_TEXTURES[0].convert()
                          }
         self.map = [[0 for g in range(len(obj.game_map))] for i in range(len(obj.game_map))]
         self.map_arr = [[], [], [], [], []]
@@ -40,21 +42,32 @@ class Drawing:
         render = self.font.render(display_fps, 0, RED)
         self.sc.blit(render, FPS_POS)
 
-    def chek_win(self, player_pos):
+    def chek_win(self, player_pos, time):
         if player_pos[0] < 0:
             while True:
                 for event in pygame.event.get():
                     if event.type == pygame.QUIT:
                         exit()
-                self.win()
+                self.win(time)
 
-    def win(self):
+    def win(self, time):
         render = self.font_win.render("YOU WIN", 1, (randrange(0, 255), randrange(0, 255), randrange(0, 255)))
         rect = pygame.Rect(0, 0, 1000, 300)
         rect.center = HALF_WIDTH, HALF_HEIGHT
         pygame.draw.rect(self.sc, BLACK, rect, border_radius=50)
         self.sc.blit(render, (rect.centerx - 430, rect.centery - 140))
         pygame.display.flip()
+        if self.flag:
+            set_time = str(datetime.datetime.now() - time)
+            set_time = set_time[:set_time.index(".")]
+            self.flag = False
+            a = cur.execute(f"""SELECT ID_Player
+                            FROM players
+                            WHERE players.Name = "{Name}"
+                            """).fetchall()
+            con.execute("INSERT INTO records VALUES(?, ?, ?)",
+                        (int(a[0][0]), RADIUS, set_time))
+            con.commit()
         self.clock.tick(15)
 
     def minimap(self, player_pos, angel, m=tuple()):
@@ -80,7 +93,7 @@ class Drawing:
                 col = (100, 100, 100)
                 try:
                     if self.map[y + i - n // 2][x + g - n // 2] and y + i - n // 2 > 0 and x + g - n // 2 > 0:
-                        if self.MAZE.check_quat( x + g - n // 2,y + i - n // 2) in quat:
+                        if self.MAZE.check_quat(x + g - n // 2, y + i - n // 2) in quat:
                             col = (255, 255, 255)
                         pygame.draw.rect(self.sc, col,
                                          (x_map + k + g * k, y_map + k + i * k, k, k))
@@ -101,7 +114,7 @@ class Drawing:
 
     def minimap_fill_quat(self):
         arr = []
-        print(sorted(self.map_arr[0]),sorted(self.MAZE.maze_sekt[0].road), sep='\n')
+        # print(sorted(self.map_arr[0]),sorted(self.MAZE.maze_sekt[0].road), sep='\n')
         for i in range(4):
             if sorted(self.map_arr[i]) == sorted(self.MAZE.maze_sekt[i].road):
                 # print('ok')

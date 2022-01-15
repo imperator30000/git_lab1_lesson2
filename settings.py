@@ -3,6 +3,7 @@ import math
 from Shader import PyShader
 from maze_back import MazeBack
 import pygame as pg
+import sqlite3 as sq
 
 pg.mixer.init(channels=2)
 # Разрешение окна
@@ -57,7 +58,65 @@ YELLOW = (220, 220, 0)
 # animation_hands_counter = 0
 #
 # c = 0
+
+Name = 'gowe'
+with sq.connect("GAME.db") as con:
+    cur = con.cursor()
+    cur.execute("""CREATE TABLE IF NOT EXISTS players (
+        ID_Player INTEGER auto_increment primary key, 
+        Name TEXT,
+        Password TEXT
+        )""")
+con.commit()
+with sq.connect("GAME.db") as con_2:
+    cur_2 = con.cursor()
+    cur_2.execute("""CREATE TABLE IF NOT EXISTS records (
+        ID_player INTEGER, 
+        Maze radius INTEGER,
+        Time TEXT,
+        FOREIGN KEY (ID_player) REFERENCES players (ID_Player)
+        )""")
+con_2.commit()
+FLAG = True
+
+
+def data_base(name, password):
+    global Name
+    cur = con.cursor()
+    info = cur.execute('SELECT * FROM players WHERE Name=? and Password=?', (name, password))
+    if info.fetchone() is None:
+        print("Вас нету в базе")
+        print("добавляю вас")
+        con.execute("INSERT INTO records VALUES(?, ?, ?)",
+                    (1, name, password))
+        return False
+    else:
+        Name = name
+        return True
+
+
+def logining_(name, password):
+    cur = con.cursor()
+    info = cur.execute(f'SELECT password FROM players WHERE Name="{name}" ').fetchall()
+    if not len(info):
+        print(1, info)
+
+        con.execute(f"INSERT INTO players VALUES({2}, '{name}', '{password}')")
+        return True
+    if password == info[0][0]:
+        print(2, info)
+        return True
+    print(3, info)
+    return False
+
+data_base('','')
+#
+# logining('Pivo', 'qwerty')
+# logining('Pivo', 'qwerty1')
+# logining('Pivo1', 'qwerty')
 # меню
+TEXTURES = {'Red brick': pg.image.load('images/2.png'), 'Grey brick': pg.image.load('images/1.png')}
+SELECTED_TEXTURES = [TEXTURES['Grey brick']]
 MENU_BACK_dict = {'Maze 2D': MazeBack, 'Maze 3D': PyShader}
 MENU_BACK = MENU_BACK_dict['Maze 2D']
 VOLUME = [1, 1, 1]

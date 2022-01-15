@@ -105,6 +105,36 @@ win_account.add_obj(win_account_btn_account)
 win_account.add_obj(win_account_btn_back)
 
 # win_account.run()
+# текстуры
+
+win_textures = Window((1200, 800), MENU_BACK)
+
+win_textures_btn_Red_brick = Obj(TEXTURES['Red brick'], (350, 200), (200, 200), 'Red brick', 'btn',
+                                 'Red brick', 40, go_next_win=False)
+
+win_textures_btn_Grey_brick = Obj(TEXTURES['Grey brick'], (650, 200), (200, 200), 'Grey brick', 'btn',
+                                  'Grey brick', 40, go_next_win=False)
+win_textures_btn_back = Obj(pg.image.load('img/brick_.png'), (350, 450), (500, 150), 'Back', 'btn', 'Back')
+
+win_textures.add_obj(win_textures_btn_Red_brick)
+win_textures.add_obj(win_textures_btn_Grey_brick)
+win_textures.add_obj(win_textures_btn_back)
+
+# текстуры меню
+
+win_menu_textures = Window((1200, 800), MENU_BACK)
+
+win_menu_textures_btn_maze_2d = Obj(pg.image.load('img/brick_.png'), (300, 200), (250, 150), 'Maze 2D', 'btn',
+                                    'Maze 2D', go_next_win=False)
+
+win_menu_textures_btn_maze_3d = Obj(pg.image.load('img/brick_.png'), (650, 200), (250, 150), 'Maze 3D', 'btn',
+                                    'Maze 3D', go_next_win=False)
+win_menu_textures_btn_back = Obj(pg.image.load('img/brick_.png'), (300, 450), (600, 150), 'Back', 'btn', 'Back')
+
+win_menu_textures.add_obj(win_menu_textures_btn_maze_2d)
+win_menu_textures.add_obj(win_menu_textures_btn_maze_3d)
+win_menu_textures.add_obj(win_menu_textures_btn_back)
+
 # кастомный режим
 win_configurable_mode = Window((1200, 800), MENU_BACK)
 
@@ -182,7 +212,8 @@ def play():
 
 
 def logining():
-    if win_login_input_login.text_ != win_login_input_password.text_ or not win_login_input_login.text_ or not win_login_input_password.text_:
+    # fl = logining_(win_login_input_login.text_, win_login_input_password.text_)
+    if True or not win_login_input_login.text_ or not win_login_input_password.text_:
         return win_invalid_password.run()
     return win_menu.run()
 
@@ -225,7 +256,7 @@ def volume_all():
 
 
 def update_all_win():
-    back = PyShader
+    back = MENU_BACK
     win_login.update_back(back)
     win_menu.update_back(back)
     win_invalid_password.update_back(back)
@@ -235,6 +266,32 @@ def update_all_win():
     win_settings.update_back(back)
     win_sound.update_back(back)
     win_account.update_back(back)
+    win_menu_textures.update_back(back)
+    win_textures.update_back(back)
+
+
+def update_all_win_3D():
+    # SELECTED_TEXTURES[0] = TEXTURES['Red brick']
+    global MENU_BACK
+    MENU_BACK = PyShader
+    update_all_win()
+
+
+def update_all_win_2D():
+    # SELECTED_TEXTURES[0] = TEXTURES['Red brick']
+    global MENU_BACK
+    MENU_BACK = MazeBack
+    update_all_win()
+
+
+def update_textures_Red_brick():
+    SELECTED_TEXTURES[0] = TEXTURES['Red brick']
+    update_all_win()
+
+
+def update_textures_Grey_brick():
+    SELECTED_TEXTURES[0] = TEXTURES['Grey brick']
+    update_all_win()
 
 
 # прикрепление функций к кнопкам
@@ -269,6 +326,8 @@ win_pause.update_obj_fun('Play', win_game.run)
 win_settings.update_obj_fun('Sound', win_sound.run)
 win_settings.update_obj_fun('Back', win_menu.run)
 win_settings.update_obj_fun('Account', win_account.run)
+win_settings.update_obj_fun('Menu textures', win_menu_textures.run)
+win_settings.update_obj_fun('Textures', win_textures.run)
 
 win_sound.update_obj_fun('Spin music', volume_music)
 win_sound.update_obj_fun('Spin menu', volume_menu)
@@ -278,5 +337,16 @@ win_sound.update_obj_fun('Back', win_settings.run)
 
 win_account.update_obj_fun('Account', win_login.run)
 win_account.update_obj_fun('Back', win_settings.run)
-update_all_win()
+
+win_menu_textures.update_obj_fun('Back', win_settings.run)
+win_menu_textures.update_obj_fun('Maze 2D', update_all_win_2D)
+win_menu_textures.update_obj_fun('Maze 3D', update_all_win_3D)
+
+win_textures.update_obj_fun('Red brick', update_textures_Red_brick)
+win_textures.update_obj_fun('Grey brick', update_textures_Grey_brick)
+win_textures.update_obj_fun('Back', win_settings.run)
+
+
+
+# update_all_win()
 win_login.run()

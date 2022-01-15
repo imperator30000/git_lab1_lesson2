@@ -178,11 +178,11 @@ class Window:
         self.m_action = [False, False, False, False]  # движение нажатие
         self.m_pos = (-1, -2)
         # self.obj = obj(self)
-        self.obj = MENU_BACK(self)
+        self.obj = MENU_BACK(self, SELECTED_TEXTURES[0])
 
 
     def update_back(self, back):
-        self.obj = back(self)
+        self.obj = back(self,SELECTED_TEXTURES[0])
 
     def update_obj_fun(self, name, fun):
         for i in self.objs:
