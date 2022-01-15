@@ -212,8 +212,8 @@ def play():
 
 
 def logining():
-    # fl = logining_(win_login_input_login.text_, win_login_input_password.text_)
-    if True or not win_login_input_login.text_ or not win_login_input_password.text_:
+    fl = logining_(win_login_input_login.text_, win_login_input_password.text_)
+    if not fl or not win_login_input_login.text_ or not win_login_input_password.text_:
         return win_invalid_password.run()
     return win_menu.run()
 

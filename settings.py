@@ -96,12 +96,16 @@ def data_base(name, password):
 
 
 def logining_(name, password):
-    cur = con.cursor()
-    info = cur.execute(f'SELECT password FROM players WHERE Name="{name}" ').fetchall()
+    conn = sq.connect('GAME.db')
+    cur_ = conn.cursor()
+    info = cur_.execute(f'SELECT password FROM players WHERE Name="{name}" ').fetchall()
     if not len(info):
         print(1, info)
+        ids = cur_.execute(f'SELECT [ID_Player] FROM players ').fetchall()
+        id_ = max([i[0] for i in ids]) + 1
 
-        con.execute(f"INSERT INTO players VALUES({2}, '{name}', '{password}')")
+        cur_.execute(f"INSERT INTO players VALUES({id_}, '{name}', '{password}')")
+        conn.commit()
         return True
     if password == info[0][0]:
         print(2, info)
@@ -109,7 +113,7 @@ def logining_(name, password):
     print(3, info)
     return False
 
-data_base('','')
+logining_('qw','qw')
 #
 # logining('Pivo', 'qwerty')
 # logining('Pivo', 'qwerty1')
