@@ -308,12 +308,16 @@ class Maze:
     #  (self.l1 + self.r % 2, len(self.maze) - self.l1 - self.r % 2),
     #  (self.l2, self.l2 + 1), (len(self.maze) - self.l3 - 2, self.l3)]
 
-    def check_quat(self, x=0, y=0, fl=False):
+    def check_quat(self, x=0, y=0, fl=False, walls=False):
         if fl and x == self.r and y in (self.r - self.k, self.r - self.k + 1):
             return 0
         for i in range(4):
             if (x, y) in self.maze_sekt[i].road:
                 return i
+            if self.maze_sekt[i].maps[y][x] in (1, 2):
+                if walls:
+                    return i
+                return 4
         return 4
 
 

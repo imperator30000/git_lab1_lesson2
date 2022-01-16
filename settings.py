@@ -20,7 +20,12 @@ RADIUS = 11
 
 TILE = 100
 FPS_POS = (WIDTH - 65, 5)
+TIME_POS = (5, 170)
 
+setting_time = time_now = 300
+zero = 0
+count_time = 0
+quat_update = 0
 # player settings
 # player_pos = (HALF_WIDTH, HALF_HEIGHT)  # Позиция игрока
 player_angle = 4.7  # Направление взгляда
@@ -113,7 +118,8 @@ def logining_(name, password):
     print(3, info)
     return False
 
-logining_('qw','qw')
+
+logining_('qw', 'qw')
 #
 # logining('Pivo', 'qwerty')
 # logining('Pivo', 'qwerty1')
@@ -123,7 +129,7 @@ TEXTURES = {'Red brick': pg.image.load('images/2.png'), 'Grey brick': pg.image.l
 SELECTED_TEXTURES = [TEXTURES['Grey brick']]
 MENU_BACK_dict = {'Maze 2D': MazeBack, 'Maze 3D': PyShader}
 MENU_BACK = MENU_BACK_dict['Maze 2D']
-VOLUME = [1, 1, 1]
+VOLUME = [0, 0, 0]
 BACK_MUZ = pg.mixer.Sound('back_mus.wav')
 CLICK_SOUND = pg.mixer.Sound("click.wav")
 BACK_MUZ.set_volume(VOLUME[0])

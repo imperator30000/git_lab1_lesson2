@@ -36,6 +36,26 @@ class Drawing:
                 i, object, object_pos = obj
                 self.sc.blit(object, object_pos)
 
+    def time_clock(self):
+        # таймер
+        global time_now, count_time
+        time_now -= 1
+        display_time = str(time_now)
+        if int(display_time) <= zero:
+            count_time += 1
+            time_now = setting_time
+            display_time = str(time_now)
+        if len(display_time) >= 5:
+            display_time = str(int(display_time[:-2]) // 60) + ":" + str(
+                int(display_time[:-2]) % 60) + ":" + display_time[-2:]
+        elif len(display_time) >= 3:
+            display_time = display_time[:-2] + ":" + display_time[-2:]
+        else:
+            display_time = "00" + ":" + display_time[-2:]
+        display_time = "Update: " + display_time
+        render = self.font.render(display_time, 0, BLACK)
+        self.sc.blit(render, TIME_POS)
+
     def fps(self, clock):
         # Счётчик кадров
         display_fps = str(int(clock.get_fps()))
@@ -59,14 +79,20 @@ class Drawing:
         pygame.display.flip()
         if self.flag:
             set_time = str(datetime.datetime.now() - time)
-            set_time = set_time[:set_time.index(".")]
+            set_time = set_time[:set_time.index(".")].split(":")
+            print(datetime.timedelta(hours=int(set_time[0]), minutes=int(set_time[1]), seconds=int(set_time[2])))
+            print(datetime.timedelta(hours=0, minutes=count_time * setting_time // 100 // 60,
+                                     seconds=count_time * setting_time // 100 % 60))
+            game_time = datetime.timedelta(hours=int(set_time[0]), minutes=int(set_time[1]), seconds=int(set_time[2]))
+            update_time = datetime.timedelta(hours=0, minutes=count_time * setting_time // 100 // 60,
+                                             seconds=count_time * setting_time // 100 % 60)
             self.flag = False
             a = cur.execute(f"""SELECT ID_Player
                             FROM players
                             WHERE players.Name = "{Name}"
                             """).fetchall()
             con.execute("INSERT INTO records VALUES(?, ?, ?)",
-                        (int(a[0][0]), RADIUS, set_time))
+                        (int(a[0][0]), RADIUS, game_time + update_time))
             con.commit()
         self.clock.tick(15)
 

@@ -87,19 +87,32 @@ class Game:
             # счётчик фпсD
             self.drawing.fps(self.clock)
             self.drawing.chek_win(self.player.pos, now)
+            self.drawing.time_clock()
             if keys[pygame.K_m]:
                 self.all_update()
             self.clock.tick()
 
     def all_update(self):
-        self.MAZE.update_sek(0)
-        self.drawing.minimap_clear_quat(0)
-        self.player_pos, self.game_map, self.win_pos = self.MAZE.info()
-        self.player_pos = (self.player_pos[0] * 100 + 50, self.player_pos[1] * 100 + 50)
-        self.win_pos = (self.win_pos[0] * 100, self.win_pos[1] * 100)
+        global quat_update
+
+        player_quat = self.MAZE.check_quat(int(self.player.pos[0]//100), int(self.player.pos[1]//100), walls=True)
+        print(quat_update, player_quat)
+        new_pos = player_quat == quat_update
+
+        self.MAZE.update_sek(quat_update)
+        self.drawing.minimap_clear_quat(quat_update)
+        _, self.game_map, __ = self.MAZE.info()
+        if new_pos:
+            self.player_pos, self.win_pos = _, __
+            self.player_pos = (self.player_pos[0] * 100 + 50, self.player_pos[1] * 100 + 50)
+            self.win_pos = (self.win_pos[0] * 100, self.win_pos[1] * 100)
+            self.player = Player(self.player_pos)
+
         self.world_map, self.collision_walls, self.WORLD_WIDTH, self.WORLD_HEIGHT = map.create_map(self.game_map)
-        self.player = Player(self.player_pos)  # Игрок
         self.clock = pygame.time.Clock()  # Клас для определениея количества кадров в секунду
+        quat_update = (quat_update + 1) % 4
+        pygame.time.wait(300)
+
         self.run()
 
     # # Основное рабочее окно
