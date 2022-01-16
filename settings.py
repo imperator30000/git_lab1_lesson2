@@ -64,7 +64,7 @@ YELLOW = (220, 220, 0)
 #
 # c = 0
 
-Name = 'gowe'
+Name = ['qw']
 with sq.connect("GAME.db") as con:
     cur = con.cursor()
     cur.execute("""CREATE TABLE IF NOT EXISTS players (
@@ -96,7 +96,7 @@ def data_base(name, password):
                     (1, name, password))
         return False
     else:
-        Name = name
+        Name[0] = name
         return True
 
 
@@ -113,10 +113,10 @@ def logining_(name, password):
             id_ = 0
         cur_.execute(f"INSERT INTO players VALUES({id_}, '{name}', '{password}')")
         conn.commit()
-        Name = name
+        Name[0] = name
         return True
     if password == info[0][0]:
-        Name = name
+        Name[0] = name
         return True
     return False
 

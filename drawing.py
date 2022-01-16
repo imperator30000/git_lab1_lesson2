@@ -93,11 +93,10 @@ class Drawing:
             self.flag = False
             a = cur.execute(f"""SELECT ID_Player
                             FROM players
-                            WHERE players.Name = "{self.Name}"
+                            WHERE players.Name = "{Name[0]}"
                             """).fetchall()
             print(a)
-            con.execute("INSERT INTO records VALUES(?, ?, ?)",
-                        (int(a[0][0]), RADIUS, game_time + update_time))
+            con.execute(f"INSERT INTO records VALUES('{int(a[0][0])}', '{ RADIUS}', '{game_time + update_time}')")
             con.commit()
         self.clock.tick(15)
 
