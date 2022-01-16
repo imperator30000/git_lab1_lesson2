@@ -22,7 +22,7 @@ TILE = 100
 FPS_POS = (WIDTH - 65, 5)
 TIME_POS = (5, 170)
 
-setting_time = time_now = 300
+setting_time = time_now = 300 * 100
 zero = 0
 count_time = 0
 quat_update = 0
@@ -101,25 +101,25 @@ def data_base(name, password):
 
 
 def logining_(name, password):
+    global Name
     conn = sq.connect('GAME.db')
     cur_ = conn.cursor()
     info = cur_.execute(f'SELECT password FROM players WHERE Name="{name}" ').fetchall()
     if not len(info):
-        print(1, info)
         ids = cur_.execute(f'SELECT [ID_Player] FROM players ').fetchall()
-        id_ = max([i[0] for i in ids]) + 1
-
+        try:
+            id_ = max([i[0] for i in ids]) + 1
+        except ValueError:
+            id_ = 0
         cur_.execute(f"INSERT INTO players VALUES({id_}, '{name}', '{password}')")
         conn.commit()
+        Name = name
         return True
     if password == info[0][0]:
-        print(2, info)
+        Name = name
         return True
-    print(3, info)
     return False
 
-
-logining_('qw', 'qw')
 #
 # logining('Pivo', 'qwerty')
 # logining('Pivo', 'qwerty1')
@@ -129,7 +129,10 @@ TEXTURES = {'Red brick': pg.image.load('images/2.png'), 'Grey brick': pg.image.l
 SELECTED_TEXTURES = [TEXTURES['Grey brick']]
 MENU_BACK_dict = {'Maze 2D': MazeBack, 'Maze 3D': PyShader}
 MENU_BACK = MENU_BACK_dict['Maze 2D']
-VOLUME = [0, 0, 0]
+VOLUME = [0, 0.7, 1]
 BACK_MUZ = pg.mixer.Sound('back_mus.wav')
 CLICK_SOUND = pg.mixer.Sound("click.wav")
+STEP_SOUND = pg.mixer.Sound('step.wav')
 BACK_MUZ.set_volume(VOLUME[0])
+CLICK_SOUND.set_volume(VOLUME[1])
+STEP_SOUND.set_volume(VOLUME[2])

@@ -66,15 +66,18 @@ win_settings.add_obj(win_settings_btn_back)
 
 win_sound = Window((1200, 800), MENU_BACK)
 win_sound_title_music = Obj(pg.image.load('img/brick_.png'), (50, 200), (300, 100), 'Music', 'title', 'Music')
-win_sound_spin_music = Obj(pg.image.load('img/brick_.png'), (950, 200), (100, 100), 'Spin music', 'spin', '50',
+win_sound_spin_music = Obj(pg.image.load('img/brick_.png'), (950, 200), (100, 100), 'Spin music', 'spin',
+                           str(int(VOLUME[0] * 50)),
                            min_max=[0, 50])
 
 win_sound_title_menu = Obj(pg.image.load('img/brick_.png'), (50, 350), (300, 100), 'Menu', 'title', 'Menu')
-win_sound_spin_menu = Obj(pg.image.load('img/brick_.png'), (950, 350), (100, 100), 'Spin menu', 'spin', '50',
+win_sound_spin_menu = Obj(pg.image.load('img/brick_.png'), (950, 350), (100, 100), 'Spin menu', 'spin',
+                          str(int(VOLUME[1] * 50)),
                           min_max=[0, 50])
 
 win_sound_title_game = Obj(pg.image.load('img/brick_.png'), (50, 500), (300, 100), 'Game', 'title', 'Game')
-win_sound_spin_game = Obj(pg.image.load('img/brick_.png'), (950, 500), (100, 100), 'Spin game', 'spin', '50',
+win_sound_spin_game = Obj(pg.image.load('img/brick_.png'), (950, 500), (100, 100), 'Spin game', 'spin',
+                          str(int(VOLUME[2] * 50)),
                           min_max=[0, 50])
 win_sound_title_all = Obj(pg.image.load('img/brick_.png'), (50, 50), (300, 100), 'All', 'title', 'All')
 win_sound_spin_all = Obj(pg.image.load('img/brick_.png'), (950, 50), (100, 100), 'Spin all', 'spin', '50',
@@ -245,7 +248,7 @@ def volume_game(num=None):
         VOLUME[2] = num[0]
         win_sound_spin_game.text_ = num[1]
         win_sound_spin_game.update_text()
-    BACK_MUZ.set_volume(VOLUME[2])
+    STEP_SOUND.set_volume(VOLUME[2])
 
 
 def volume_all():
@@ -346,7 +349,5 @@ win_textures.update_obj_fun('Red brick', update_textures_Red_brick)
 win_textures.update_obj_fun('Grey brick', update_textures_Grey_brick)
 win_textures.update_obj_fun('Back', win_settings.run)
 
-
-
 # update_all_win()
-win_login.run()
+win_menu.run()

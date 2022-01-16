@@ -11,6 +11,7 @@ class Player:
         self.side = 50
         self.rect = pygame.Rect(*player_pos, self.side, self.side)
         self.sensitivity = 0.001
+        self.steping = False
 
     # Возвращаем позицию игрока по X, Y
     @property
@@ -61,23 +62,41 @@ class Player:
         keys = pygame.key.get_pressed()
         # if keys[pygame.K_ESCAPE]:
         #     exit()
+        step = False
+        # if self.steping:
+        #     STEP_SOUND.play(-1)
         if keys[pygame.K_w]:
             dx = player_speed * cos_a
             dy = player_speed * sin_a
             animation_hands = True
             self.detect_collision(dx, dy, self.coll_walls)
+            step = True
         if keys[pygame.K_s]:
             dx = -player_speed * cos_a
             dy = -player_speed * sin_a
             self.detect_collision(dx, dy, self.coll_walls)
+            step = True
         if keys[pygame.K_a]:
             dx = player_speed * sin_a
             dy = -player_speed * cos_a
             self.detect_collision(dx, dy, self.coll_walls)
+            step = True
         if keys[pygame.K_d]:
             dx = -player_speed * sin_a
             dy = player_speed * cos_a
             self.detect_collision(dx, dy, self.coll_walls)
+            step = True
+
+
+        if step and not self.steping:
+            self.steping =  True
+            STEP_SOUND.play(-1)
+        if not step and self.steping:
+            self.steping = False
+            STEP_SOUND.stop()
+
+
+
         # if animation_hands and drawing:
         #     self.sensitivity *= 5
 

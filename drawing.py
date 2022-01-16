@@ -8,6 +8,7 @@ import datetime
 class Drawing:
     def __init__(self, obj):
         self.flag = True
+        self.Name = Name
         self.sc = obj.screen
         self.clock = obj.clock
         self.game_map = obj.game_map
@@ -23,7 +24,9 @@ class Drawing:
         for i in range(7):
             for g in range(7):
                 self.map[start + i][start + g] = 1
-                self.map_arr[self.MAZE.check_quat(start + g, start + i)].append(tuple([start + g, start + i]))
+                self.map_arr[self.MAZE.check_quat(start + g, start + i)].append((start + g, start + i))
+
+
 
     def background(self):
         # Рисуем землю и небо
@@ -36,12 +39,13 @@ class Drawing:
                 i, object, object_pos = obj
                 self.sc.blit(object, object_pos)
 
-    def time_clock(self):
+    def time_clock(self, game):
         # таймер
         global time_now, count_time
         time_now -= 1
         display_time = str(time_now)
         if int(display_time) <= zero:
+            game.all_update()
             count_time += 1
             time_now = setting_time
             display_time = str(time_now)
@@ -80,17 +84,18 @@ class Drawing:
         if self.flag:
             set_time = str(datetime.datetime.now() - time)
             set_time = set_time[:set_time.index(".")].split(":")
-            print(datetime.timedelta(hours=int(set_time[0]), minutes=int(set_time[1]), seconds=int(set_time[2])))
-            print(datetime.timedelta(hours=0, minutes=count_time * setting_time // 100 // 60,
-                                     seconds=count_time * setting_time // 100 % 60))
+            # print(datetime.timedelta(hours=int(set_time[0]), minutes=int(set_time[1]), seconds=int(set_time[2])))
+            # print(datetime.timedelta(hours=0, minutes=count_time * setting_time // 100 // 60,
+            #                          seconds=count_time * setting_time // 100 % 60))
             game_time = datetime.timedelta(hours=int(set_time[0]), minutes=int(set_time[1]), seconds=int(set_time[2]))
             update_time = datetime.timedelta(hours=0, minutes=count_time * setting_time // 100 // 60,
                                              seconds=count_time * setting_time // 100 % 60)
             self.flag = False
             a = cur.execute(f"""SELECT ID_Player
                             FROM players
-                            WHERE players.Name = "{Name}"
+                            WHERE players.Name = "{self.Name}"
                             """).fetchall()
+            print(a)
             con.execute("INSERT INTO records VALUES(?, ?, ?)",
                         (int(a[0][0]), RADIUS, game_time + update_time))
             con.commit()
@@ -105,7 +110,10 @@ class Drawing:
         x = int(x)
         y = int(y)
         x_map, y_map = 0, 0
-        if tuple([x, y]) not in self.map_arr[self.MAZE.check_quat(x, y)] and not self.MAZE.maze[y][x]:
+        # print(*self.MAZE.maze, sep='\n')
+        if tuple([x, y]) not in self.map_arr[self.MAZE.check_quat(x, y)] and \
+                not self.MAZE.maze[y][x] or x == self.MAZE.r and \
+                y in (self.MAZE.r - self.MAZE.k, self.MAZE.r - self.MAZE.k + 1):
             self.map[int(y)][int(x)] = 1
             if tuple([x, y]) not in self.MAZE.line()[-1]:
                 self.map_arr[self.MAZE.check_quat(x, y)].append((x, y))
@@ -135,8 +143,11 @@ class Drawing:
         self.map_arr[num].clear()
         for i in range(len(self.map)):
             for g in range(len(self.map[i])):
-                if self.MAZE.check_quat(g, i) == num:
+                if self.MAZE.check_quat(g, i, True, walls=True) == num:
                     self.map[i][g] = 0
+        # if not num:
+        #     self.map[self.MAZE.r - self.MAZE.k][self.MAZE.r] = 0
+        #     self.map[self.MAZE.r - self.MAZE.k + 1][self.MAZE.r] = 0
 
     def minimap_fill_quat(self):
         arr = []
