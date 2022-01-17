@@ -42,6 +42,8 @@ class Game:
         # self.drawing = Drawing(self)
 
     def new_maze(self, radius):
+        global quat_update
+        quat_update = 0
 
         self.MAZE = Maze(radius)
         self.radius = radius
@@ -121,7 +123,7 @@ class Game:
         self.player.steping = True
         self.drawing.time_now = self.drawing.setting_time
         self.drawing.count_time = 0
-        quat_update = (quat_update + 1) % 41
+        quat_update = (quat_update + 1) % 4
 
         # self.run()
 
