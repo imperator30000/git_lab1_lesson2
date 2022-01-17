@@ -156,9 +156,9 @@ win_configurable_mode_spin_radius = Obj(pg.image.load('img/brick_.png'), (950, 2
 win_configurable_mode_title_time = Obj(pg.image.load('img/brick_.png'), (850, 350), (300, 100), 'Time update', 'title',
                                        'Time update', 50)
 win_configurable_mode_spin_time = Obj(pg.image.load('img/brick_.png'), (950, 500), (100, 100), 'Spin time', 'spin',
-                                      '900', 40,
-                                      step_spin=10,
-                                      min_max=(100, 1000))
+                                      '100', 40,
+                                      step_spin=1,
+                                      min_max=(1, 1000))
 
 win_configurable_mode.add_obj(win_configurable_mode_title_configurable_mode)
 win_configurable_mode.add_obj(win_configurable_mode_btn_hard_mode)
@@ -209,8 +209,29 @@ win_game = Game()
 win_game.pause_run = win_pause.run
 
 
-def play():
+def play_configurable():
     win_game.new_maze(int(win_configurable_mode_spin_radius.text_))
+    win_game.drawing.time_now = 100 * int(win_configurable_mode_spin_time.text_)
+    win_game.drawing.setting_time = 100 * int(win_configurable_mode_spin_time.text_)
+    win_game.drawing.count_time = 0
+
+    win_game.run()
+
+def play_hard():
+    r = 11
+    hard = int(win_hard_mode_spin_radius.text_)
+    for i in range(hard - 1):
+        r += 4 + i % 2
+    time_ = 40 + hard * 28
+    win_game.new_maze(r)
+    win_game.drawing.time_now = 100 * time_
+    win_game.drawing.setting_time = 100 * time_
+    win_game.drawing.count_time = 0
+    win_game.run()
+
+
+def restart():
+    win_game.new_maze(win_game.radius)
     win_game.run()
 
 
@@ -310,11 +331,11 @@ win_menu.update_obj_fun('Settings', win_settings.run)
 win_configurable_mode.update_obj_fun('Hard mode', win_hard_mode.run)
 win_configurable_mode.update_obj_fun('Menu', win_menu.run)
 
-win_configurable_mode.update_obj_fun('Play', play)
+win_configurable_mode.update_obj_fun('Play', play_configurable)
 
 win_hard_mode.update_obj_fun('Configurable mode', win_configurable_mode.run)
 win_hard_mode.update_obj_fun('Menu', win_menu.run)
-win_hard_mode.update_obj_fun('Play', play)
+win_hard_mode.update_obj_fun('Play', play_hard)
 # windows = [win_menu]
 # def f():
 #     global MENU_BACK
@@ -323,7 +344,7 @@ win_hard_mode.update_obj_fun('Play', play)
 #         i.obj = MENU_BACK
 #         i.back = MENU_BACK.run
 win_pause.update_obj_fun('Menu', win_menu.run)
-win_pause.update_obj_fun('Restart', play)
+win_pause.update_obj_fun('Restart', restart)
 win_pause.update_obj_fun('Play', win_game.run)
 
 win_settings.update_obj_fun('Sound', win_sound.run)
@@ -351,3 +372,15 @@ win_textures.update_obj_fun('Back', win_settings.run)
 
 # update_all_win()
 win_menu.run()
+# win = Window((1200, 800), MENU_BACK)
+# btn = Obj(pg.image.load('img/brick_.png'), (650, 200), (250, 150), 'button', 'btn',
+#           'button', go_next_win=False)
+# inputBox = InputBox(pg.image.load('img/brick_.png'), (300, 200), (250, 150), 'Input', 'btn',
+#                     '')
+# title = Obj(pg.image.load('img/brick_.png'), (300, 450), (250, 150), 'title', 'title', 'title')
+# spin = Obj(pg.image.load('img/brick_.png'), (650, 450), (250, 150), 'spin', 'spin', '0', min_max=[0, 10])
+# # win.add_obj(btn)
+# # win.add_obj(inputBox)
+# # win.add_obj(title)
+# # win.add_obj(spin)
+# win.run()

@@ -15,6 +15,7 @@ class Game:
         self.collision_walls = []
         self.world_map = []
         self.pause_run = lambda: 1
+        self.win_run = lambda: 1
         self.radius = radius
         self.MAZE = None
 
@@ -41,6 +42,7 @@ class Game:
         # self.drawing = Drawing(self)
 
     def new_maze(self, radius):
+
         self.MAZE = Maze(radius)
         self.radius = radius
 
@@ -53,7 +55,13 @@ class Game:
         self.world_map, self.collision_walls, self.WORLD_WIDTH, self.WORLD_HEIGHT = map.create_map(self.game_map)
         self.player = Player(self.player_pos)  # Игрок
         self.clock = pygame.time.Clock()  # Клас для определениея количества кадров в секунду
-        self.drawing = Drawing(self)
+        try:
+            setting_time_ = self.drawing.setting_time
+            self.drawing = Drawing(self)
+            self.drawing.time_now, self.drawing.setting_time = setting_time_, setting_time_
+        except AttributeError:
+            self.drawing = Drawing(self)
+
 
     def run(self):
         now = datetime.datetime.now()
@@ -111,8 +119,9 @@ class Game:
         self.world_map, self.collision_walls, self.WORLD_WIDTH, self.WORLD_HEIGHT = map.create_map(self.game_map)
         self.clock = pygame.time.Clock()  # Клас для определениея количества кадров в секунду
         self.player.steping = True
-        quat_update = (quat_update + 1) % 4
-        pygame.time.wait(100)
+        self.drawing.time_now = self.drawing.setting_time
+        self.drawing.count_time = 0
+        quat_update = (quat_update + 1) % 41
 
         # self.run()
 

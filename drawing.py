@@ -7,6 +7,10 @@ import datetime
 
 class Drawing:
     def __init__(self, obj):
+        self.obj = obj
+        self.time_now = time_now
+        self.setting_time = self.time_now
+        self.count_time = count_time
         self.flag = True
         self.Name = Name
         self.sc = obj.screen
@@ -41,13 +45,12 @@ class Drawing:
 
     def time_clock(self, game):
         # таймер
-        global time_now, count_time
-        time_now -= 1
-        display_time = str(time_now)
+        self.time_now -= 1
+        display_time = str(self.time_now)
         if int(display_time) <= zero:
             game.all_update()
-            count_time += 1
-            time_now = setting_time
+            self.count_time += 1
+            time_now = self.setting_time
             display_time = str(time_now)
         if len(display_time) >= 5:
             display_time = str(int(display_time[:-2]) // 60) + ":" + str(
@@ -88,8 +91,8 @@ class Drawing:
             # print(datetime.timedelta(hours=0, minutes=count_time * setting_time // 100 // 60,
             #                          seconds=count_time * setting_time // 100 % 60))
             game_time = datetime.timedelta(hours=int(set_time[0]), minutes=int(set_time[1]), seconds=int(set_time[2]))
-            update_time = datetime.timedelta(hours=0, minutes=count_time * setting_time // 100 // 60,
-                                             seconds=count_time * setting_time // 100 % 60)
+            update_time = datetime.timedelta(hours=0, minutes=self.count_time * self.setting_time // 100 // 60,
+                                             seconds=self.count_time * self.setting_time // 100 % 60)
             self.flag = False
             a = cur.execute(f"""SELECT ID_Player
                             FROM players
@@ -98,6 +101,8 @@ class Drawing:
             print(a)
             con.execute(f"INSERT INTO records VALUES('{int(a[0][0])}', '{ RADIUS}', '{game_time + update_time}')")
             con.commit()
+            self.obj.pause_run() #self.obj.win_run() когда будет готово окно победы
+
         self.clock.tick(15)
 
     def minimap(self, player_pos, angel, m=tuple()):
