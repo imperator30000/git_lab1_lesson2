@@ -209,13 +209,44 @@ win_game = Game()
 win_game.pause_run = win_pause.run
 
 
+# окно победы после кастомного режима
+win_win_configurable = Window((1200, 800), MENU_BACK)
+
+win_win_configurable_title_win = Obj(pg.image.load('img/brick_.png'), (120, 65), (960, 260), 'You win', 'title',
+                                     'You win',
+                                     200)
+win_win_configurable_title_title_time = Obj(pg.image.load('img/brick_.png'), (480, 390), (240, 130), 'title_Time',
+                                            'title', 'Time')
+win_win_configurable_title_time = Obj(pg.image.load('img/brick_.png'), (480, 585), (240, 130), 'Time', 'title',
+                                      '00:00:00:00', 40)
+win_win_configurable_title_title_radius = Obj(pg.image.load('img/brick_.png'), (840, 390), (240, 130), 'title_Radius',
+                                              'title', 'Radius')
+win_win_configurable_title_radius = Obj(pg.image.load('img/brick_.png'), (840, 585), (240, 130), 'Radius', 'title',
+                                        '11')
+
+win_win_configurable_btn_restart = Obj(pg.image.load('img/brick_.png'), (120, 390), (240, 130), 'Restart', 'btn',
+                                       'Restart', 50)
+win_win_configurable_btn_menu = Obj(pg.image.load('img/brick_.png'), (120, 585), (240, 130), 'Menu', 'btn', 'Menu')
+
+win_win_configurable.add_obj(win_win_configurable_title_win)
+win_win_configurable.add_obj(win_win_configurable_title_title_time)
+win_win_configurable.add_obj(win_win_configurable_title_time)
+win_win_configurable.add_obj(win_win_configurable_title_title_radius)
+win_win_configurable.add_obj(win_win_configurable_title_radius)
+win_win_configurable.add_obj(win_win_configurable_btn_menu)
+win_win_configurable.add_obj(win_win_configurable_btn_restart)
+
+
 def play_configurable():
     win_game.new_maze(int(win_configurable_mode_spin_radius.text_))
     win_game.drawing.time_now = 100 * int(win_configurable_mode_spin_time.text_)
     win_game.drawing.setting_time = 100 * int(win_configurable_mode_spin_time.text_)
     win_game.drawing.count_time = 0
+    win_game.window_win = win_win_configurable
+    win_game.win_run = win_win_configurable.run
 
     win_game.run()
+
 
 def play_hard():
     r = 11
@@ -292,6 +323,7 @@ def update_all_win():
     win_account.update_back(back)
     win_menu_textures.update_back(back)
     win_textures.update_back(back)
+    win_win_configurable.update_back(back)
 
 
 def update_all_win_3D():
@@ -369,6 +401,9 @@ win_menu_textures.update_obj_fun('Maze 3D', update_all_win_3D)
 win_textures.update_obj_fun('Red brick', update_textures_Red_brick)
 win_textures.update_obj_fun('Grey brick', update_textures_Grey_brick)
 win_textures.update_obj_fun('Back', win_settings.run)
+
+win_win_configurable.update_obj_fun('Menu', win_menu.run)
+win_win_configurable.update_obj_fun('Restart', restart)
 
 # update_all_win()
 win_menu.run()

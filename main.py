@@ -11,6 +11,7 @@ class Game:
     def __init__(self, radius=RADIUS):
         pygame.init()
         self.screen = pygame.display.set_mode((WIDTH, HEIGHT))
+        self.window_win = None
         self.save_minimap_setting = []
         self.collision_walls = []
         self.world_map = []

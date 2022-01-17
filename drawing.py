@@ -101,6 +101,12 @@ class Drawing:
             print(a)
             con.execute(f"INSERT INTO records VALUES('{int(a[0][0])}', '{ RADIUS}', '{game_time + update_time}')")
             con.commit()
+            self.obj.window_win.objs['Time'].text_ = str(game_time + update_time)
+            self.obj.window_win.objs['Time'].update_text()
+            self.obj.window_win.objs['Radius'].text_ = str(self.obj.radius)
+            self.obj.window_win.objs['Radius'].update_text()
+
+            self.obj.win_run()
             self.obj.pause_run() #self.obj.win_run() когда будет готово окно победы
 
         self.clock.tick(15)
