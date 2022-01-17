@@ -252,7 +252,6 @@ class Maze:
         for i in self.maze_sekt:
             i.to_create()
 
-        print(self.maze_sekt[0].road)
         if (self.r, self.r - 5) not in self.maze_sekt[0].road:
             self.maze_sekt[0].road.append((self.r, self.r - 5))
         if (1, self.r - 1) not in self.maze_sekt[3].road:
@@ -309,10 +308,16 @@ class Maze:
     #  (self.l1 + self.r % 2, len(self.maze) - self.l1 - self.r % 2),
     #  (self.l2, self.l2 + 1), (len(self.maze) - self.l3 - 2, self.l3)]
 
-    def check_quat(self, x, y):
+    def check_quat(self, x=0, y=0, fl=False, walls=False):
+        if fl and x == self.r and y in (self.r - self.k, self.r - self.k + 1):
+            return 0
         for i in range(4):
             if (x, y) in self.maze_sekt[i].road:
                 return i
+            if self.maze_sekt[i].maps[y][x] in (1, 2):
+                if walls:
+                    return i
+                return 4
         return 4
 
 
@@ -329,64 +334,13 @@ class Maze:
         return (self.r, self.r), self.maze, (0, self.r)
 
 
-class Player:
-    def __init__(self, x, y, size, keys):
-        self.x = x
-        self.y = y
-        self.size = size
-        self.speed = 0.2
-        self.keys = keys
-
-    def draw(self, sc):
-        pygame.draw.circle(sc, 'red', (self.x, self.y), self.size)
 
 
-class Game:
-    def __init__(self, size, maze, size_pix=0.05):
-        pygame.init()
-        self.size = size
-        self.size_pix = int(size_pix * size)
-        self.screen = pygame.display.set_mode((size, size))
-        self.players = []
-        self.maze = maze
 
-    def add_players(self, player):
-        self.players.append(player)
-
-    def draw(self):
-        self.screen.fill((0, 0, 0))
-        pos = [250, 250]
-        c = 0
-        for i in self.players:
-            i.draw(self.screen)
-        for i in range(15):
-            for g in range(15):
-                if self.maze[i][g]:
-                    pygame.draw.rect(self.screen, (255, 255, 255),
-                                     (g * self.size_pix, i * self.size_pix, self.size_pix, self.size_pix))
-
-        pygame.display.flip()
-
-    def events(self):
-        for g in self.players:
-            g.draw(self.screen)
-            if pygame.key.get_pressed()[g.keys['right']]:
-                g.x += g.speed
-            if pygame.key.get_pressed()[g.keys['left']]:
-                g.x -= g.speed
-            if pygame.key.get_pressed()[g.keys['down']]:
-                g.y += g.speed
-            if pygame.key.get_pressed()[g.keys['up']]:
-                g.y -= g.speed
-            for i in pygame.event.get():
-                if i.type == pygame.QUIT:
-                    sys.exit()
-
-
-ex2 = Maze(10)  # создание объекта лабиринта с каким-то радиусом
-ex2.make_maze()  # обновление лабиринта
-ex2.update_sek(1)  # обновление сектора (1, 2, 3, 4 - обновление сектора под номером )  1
-print(ex2.check_quat(9, 19))
+# ex2 = Maze(10)  # создание объекта лабиринта с каким-то радиусом
+# ex2.make_maze()  # обновление лабиринта
+# ex2.update_sek(1)  # обновление сектора (1, 2, 3, 4 - обновление сектора под номером )  1
+# print(ex2.check_quat(9, 19))
 #####################################################################################  4 2
 #####################################################################################   3
 # ex2.update_line()  # обновление координат проходов между секторами (0 - все, 1, 2, 3)    1

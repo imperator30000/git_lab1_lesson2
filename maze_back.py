@@ -3,7 +3,7 @@ from generation_lab import Road
 
 
 class MazeBack:
-    def __init__(self, obj):
+    def __init__(self, obj, texture):
         self.obj = obj
         self.counter = 0
         self.maze = None

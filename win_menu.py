@@ -1,10 +1,12 @@
 import pygame as pg
-
+from settings import *
 
 class Obj:
     def __init__(self, img, x_y, size, name, type_obj='title', text='', font_size=70, c=255, e=255, ch=False, ok=255,
                  min_max=(11, 99), fun=lambda: '', step_spin=1, go_next_win=True):
 
+
+        self.click = CLICK_SOUND
         self.curs = 0
         self.active = False
         self.rect = pg.Rect(*x_y, *size)
@@ -41,9 +43,13 @@ class Obj:
             a = self.in_obj(x_y)
             if self.min_max[0] <= text_ + self.step_spin * k <= self.min_max[1] and a:
                 self.text_ = str(text_ + self.step_spin * k)
-                self.text = self.font.render(self.text_, True, (0, 0, 0)).convert_alpha()
-                self.text_x_y = [self.x_y[i] + (self.size[i] - self.text.get_size()[i]) // 2 for i in range(2)]
-                self.text.set_alpha(self.counter)
+                self.update_text()
+                self.fun()
+
+    def update_text(self):
+        self.text = self.font.render(self.text_, True, (0, 0, 0)).convert_alpha()
+        self.text_x_y = [self.x_y[i] + (self.size[i] - self.text.get_size()[i]) // 2 for i in range(2)]
+        self.text.set_alpha(self.counter)
 
     def in_obj(self, x_y):
         a = [self.x_y[g] <= x_y[g] <= self.x_y[g] + self.size[g] for g in range(2)]
@@ -78,6 +84,7 @@ class Obj:
             if not self.enabled:
                 self.enabled = True
                 self.go_animation(0, 5)
+                self.click.play()
                 for i in self.dependent_objects:
                     i.enabled = True
                     i.go_animation(0, 5)
@@ -170,8 +177,12 @@ class Window:
         self.clock = pg.time.Clock()
         self.m_action = [False, False, False, False]  # движение нажатие
         self.m_pos = (-1, -2)
-        self.obj = obj(self)
-        self.back = self.obj.run
+        # self.obj = obj(self)
+        self.obj = MENU_BACK(self, SELECTED_TEXTURES[0])
+
+
+    def update_back(self, back):
+        self.obj = back(self,SELECTED_TEXTURES[0])
 
     def update_obj_fun(self, name, fun):
         for i in self.objs:
@@ -201,14 +212,14 @@ class Window:
             self.objs[i].go_animation(self.objs[i].ok_end, 5)
 
     def run(self):
+        pg.display.flip()
         pg.mouse.set_visible(True)
-
         self.black = Obj(pg.image.load('img/black.png'), (0, 0), self.size, 'black', ch=True, ok=0, e=0, c=255)
         self.objs['black'] = self.black
         self.restart()
         while True:
             sim = ''
-            self.back()
+            self.obj.run()
             self.m_action = [False, False, False, False]
             for i in pg.event.get():
                 if i.type == pg.QUIT:
