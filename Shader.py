@@ -4,7 +4,7 @@ import taichi as ti
 import taichi_glsl as ts
 from taichi_glsl import vec2, vec3
 
-ti.init(arch=ti.cuda)  # ti.cpu ti.gpu ti.vulkan ti.opengl ti.metal(macOS)
+ti.init(arch=ti.gpu)  # ti.cpu ti.gpu ti.vulkan ti.opengl ti.metal(macOS)
 resolution = width, height = vec2(1200, 800)
 
 

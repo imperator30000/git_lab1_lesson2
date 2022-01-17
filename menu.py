@@ -253,7 +253,7 @@ def play_hard():
     hard = int(win_hard_mode_spin_radius.text_)
     for i in range(hard - 1):
         r += 4 + i % 2
-    time_ = 40 + hard * 28
+    time_ = 40 + hard * 48
     win_game.new_maze(r)
     win_game.drawing.time_now = 100 * time_
     win_game.drawing.setting_time = 100 * time_
