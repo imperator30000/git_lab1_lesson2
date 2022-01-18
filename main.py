@@ -12,6 +12,7 @@ class Game:
         pygame.init()
         self.screen = pygame.display.set_mode((WIDTH, HEIGHT))
         self.window_win = None
+        self.hard = ''
         self.save_minimap_setting = []
         self.collision_walls = []
         self.world_map = []

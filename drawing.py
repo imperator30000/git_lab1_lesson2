@@ -30,8 +30,6 @@ class Drawing:
                 self.map[start + i][start + g] = 1
                 self.map_arr[self.MAZE.check_quat(start + g, start + i)].append((start + g, start + i))
 
-
-
     def background(self):
         # Рисуем землю и небо
         pygame.draw.rect(self.sc, SKYBLUE, (0, 0, WIDTH, HALF_HEIGHT))
@@ -50,15 +48,18 @@ class Drawing:
         if int(display_time) <= zero:
             game.all_update()
             self.count_time += 1
-            time_now = self.setting_time
-            display_time = str(time_now)
+            self.time_now = self.setting_time
+            display_time = str(self.time_now)
         if len(display_time) >= 5:
             display_time = str(int(display_time[:-2]) // 60) + ":" + str(
                 int(display_time[:-2]) % 60) + ":" + display_time[-2:]
         elif len(display_time) >= 3:
             display_time = display_time[:-2] + ":" + display_time[-2:]
+            if int(display_time[:-3]) in (0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10) and not int(display_time[-2:]):
+                END_COUNT.play(maxtime=500)
         else:
             display_time = "00" + ":" + display_time[-2:]
+        print(display_time)
         display_time = "Update: " + display_time
         render = self.font.render(display_time, 0, BLACK)
         self.sc.blit(render, TIME_POS)
@@ -94,20 +95,51 @@ class Drawing:
             update_time = datetime.timedelta(hours=0, minutes=self.count_time * self.setting_time // 100 // 60,
                                              seconds=self.count_time * self.setting_time // 100 % 60)
             self.flag = False
-            a = cur.execute(f"""SELECT ID_Player
-                            FROM players
-                            WHERE players.Name = "{Name[0]}"
-                            """).fetchall()
-            print(a)
-            con.execute(f"INSERT INTO records VALUES('{int(a[0][0])}', '{ RADIUS}', '{game_time + update_time}')")
-            con.commit()
+
             self.obj.window_win.objs['Time'].text_ = str(game_time + update_time)
             self.obj.window_win.objs['Time'].update_text()
-            self.obj.window_win.objs['Radius'].text_ = str(self.obj.radius)
-            self.obj.window_win.objs['Radius'].update_text()
+            try:
+                self.obj.window_win.objs['Radius'].text_ = str(self.obj.radius)
+                self.obj.window_win.objs['Radius'].update_text()
+            except KeyError:
+                print(game_time + update_time)
+                flag = False
+                conn = sq.connect('GAME.db')
+                cur_ = conn.cursor()
+                info = cur_.execute(
+                    f'SELECT Time FROM records WHERE Maze="{self.obj.hard}" and ID_player in (SELECT ID_Player FROM players WHERE Name="{Name[0]}") ').fetchall()
+                if info:
+                    flag = False
+                    arr = info[0][0].split(':')
+                    score_ = datetime.timedelta(hours=int(arr[0]), minutes=int(arr[1]), seconds=int(arr[2]))
+                else:
+                    score_ = 'None'
+                    flag = not False
+
+                if flag or score_ > game_time + update_time:
+                    score_ = game_time + update_time
+                    a = cur.execute(f"""SELECT ID_Player
+                                               FROM players
+                                               WHERE players.Name = "{Name[0]}"
+                                               """).fetchall()
+                    print(a)
+                    con.execute(
+                        f'DELETE FROM records WHERE ID_player in ('
+                        f'SELECT ID_Player FROM players WHERE Name="{Name[0]}") ').fetchall()
+                    con.execute(
+                        f"INSERT INTO records VALUES('{int(a[0][0])}', '{self.obj.hard}', '{game_time + update_time}')")
+
+                    con.commit()
+                print(f'{score_}')
+                self.obj.window_win.objs['Hard'].text_ = str(self.obj.hard)
+                self.obj.window_win.objs['Hard'].update_text()
+                self.obj.window_win.objs['Score'].text_ = f'{score_}'
+                self.obj.window_win.objs['Score'].update_text()
+            self.obj.player.steping = False
+            STEP_SOUND.stop()
 
             self.obj.win_run()
-            self.obj.pause_run() #self.obj.win_run() когда будет готово окно победы
+            self.obj.pause_run()  # self.obj.win_run() когда будет готово окно победы
 
         self.clock.tick(15)
 
