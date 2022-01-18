@@ -42,7 +42,6 @@ class MazeBack:
     def back(self):
 
         if self.counter + self.step >= len(self.maze.road):
-            print('popp')
             self.step *= -1
 
         elif self.counter + self.step <= 0:

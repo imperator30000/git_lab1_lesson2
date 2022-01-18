@@ -21,12 +21,12 @@ RADIUS = 11
 TILE = 100
 FPS_POS = (WIDTH - 65, 5)
 TIME_POS = (5, 170)
+POS_POS = (5, 200)
 
-setting_time = time_now = 10 * 100
+setting_time = time_now = 300 * 100
 zero = 0
 count_time = 0
 quat_update = 0
-
 # player settings
 # player_pos = (HALF_WIDTH, HALF_HEIGHT)  # Позиция игрока
 player_angle = 4.7  # Направление взгляда
@@ -134,6 +134,10 @@ VOLUME = [0, 0.7, 1]
 BACK_MUZ = pg.mixer.Sound('back_mus.wav')
 CLICK_SOUND = pg.mixer.Sound("click.wav")
 STEP_SOUND = pg.mixer.Sound('step.wav')
+END_COUNT = pg.mixer.Sound('end.wav')
 BACK_MUZ.set_volume(VOLUME[0])
 CLICK_SOUND.set_volume(VOLUME[1])
 STEP_SOUND.set_volume(VOLUME[2])
+END_COUNT.set_volume(VOLUME[2])
+STEP_SOUND.play(-1)
+STEP_SOUND.stop()

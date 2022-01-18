@@ -1,6 +1,7 @@
 from win_menu import *
 import pygame as pg
 from main import Game
+from datetime import time
 
 BACK_MUZ.play(-1)
 # регистрация/вход
@@ -49,7 +50,7 @@ win_settings = Window((1200, 800), MENU_BACK)
 win_settings_btn_sound = Obj(pg.image.load('img/brick_.png'), (200, 150), (350, 100), 'Sound', 'btn', 'Sound')
 win_settings_btn_account = Obj(pg.image.load('img/brick_.png'), (200, 350), (350, 100), 'Account', 'btn', 'Account')
 win_settings_btn_menu_textures = Obj(pg.image.load('img/brick_.png'), (650, 350), (350, 100), 'Menu textures', 'btn',
-                                     'Menu textures')
+                                     'Menu textures', 50)
 win_settings_btn_textures = Obj(pg.image.load('img/brick_.png'), (650, 150), (350, 100), 'Textures', 'btn', 'Textures')
 win_settings_btn_back = Obj(pg.image.load('img/brick_.png'), (200, 550), (800, 100), 'Back', 'btn', 'Back')
 
@@ -156,9 +157,9 @@ win_configurable_mode_spin_radius = Obj(pg.image.load('img/brick_.png'), (950, 2
 win_configurable_mode_title_time = Obj(pg.image.load('img/brick_.png'), (850, 350), (300, 100), 'Time update', 'title',
                                        'Time update', 50)
 win_configurable_mode_spin_time = Obj(pg.image.load('img/brick_.png'), (950, 500), (100, 100), 'Spin time', 'spin',
-                                      '900', 40,
-                                      step_spin=10,
-                                      min_max=(100, 1000))
+                                      '100', 40,
+                                      step_spin=1,
+                                      min_max=(1, 1000))
 
 win_configurable_mode.add_obj(win_configurable_mode_title_configurable_mode)
 win_configurable_mode.add_obj(win_configurable_mode_btn_hard_mode)
@@ -180,16 +181,24 @@ win_hard_mode_title_hard_mode = Obj(pg.image.load('img/brick_.png'), (50, 200), 
                                     ok=150)
 win_hard_mode_btn_play_ = Obj(pg.image.load('img/brick_.png'), (50, 350), (300, 100), 'Play', 'btn', 'Play')
 win_hard_mode_btn_menu = Obj(pg.image.load('img/brick_.png'), (50, 650), (300, 100), 'Menu', 'btn', 'Menu')
-win_hard_mode_title_radius = Obj(pg.image.load('img/brick_.png'), (850, 50), (300, 100), 'Hard', 'title', 'Hard')
-win_hard_mode_spin_radius = Obj(pg.image.load('img/brick_.png'), (950, 200), (100, 100), 'Spin hard', 'spin', '1',
-                                min_max=(1, 20))
+win_hard_mode_title_hard = Obj(pg.image.load('img/brick_.png'), (850, 50), (300, 100), 'Hard', 'title', 'Hard')
+win_hard_mode_spin_hard = Obj(pg.image.load('img/brick_.png'), (950, 200), (100, 100), 'Spin hard', 'spin', '1',
+                              min_max=(1, 20))
+win_hard_mode_title_title_score = Obj(pg.image.load('img/brick_.png'), (850, 350), (300, 100), 'Title_Score', 'title',
+                                      'Score', 50)
+win_hard_mode_title_score = Obj(pg.image.load('img/brick_.png'), (850, 500), (300, 100), 'Score', 'title',
+                                'None', 40,
+                                step_spin=1,
+                                min_max=(1, 1000))
 
 win_hard_mode.add_obj(win_hard_mode_btn_castom_mode)
 win_hard_mode.add_obj(win_hard_mode_title_hard_mode)
 win_hard_mode.add_obj(win_hard_mode_btn_play_)
 win_hard_mode.add_obj(win_hard_mode_btn_menu)
-win_hard_mode.add_obj(win_hard_mode_title_radius)
-win_hard_mode.add_obj(win_hard_mode_spin_radius, ['Hard'])
+win_hard_mode.add_obj(win_hard_mode_title_hard)
+win_hard_mode.add_obj(win_hard_mode_spin_hard, ['Hard'])
+win_hard_mode.add_obj(win_hard_mode_title_score)
+win_hard_mode.add_obj(win_hard_mode_title_title_score)
 
 # пауза
 win_pause = Window((1200, 800), MENU_BACK)
@@ -208,16 +217,137 @@ win_pause.add_obj(win_pause_btn_menu)
 win_game = Game()
 win_game.pause_run = win_pause.run
 
+# окно победы после кастомного режима
+win_win_configurable = Window((1200, 800), MENU_BACK)
 
-def play():
+win_win_configurable_title_win = Obj(pg.image.load('img/brick_.png'), (120, 65), (960, 260), 'You win', 'title',
+                                     'You win',
+                                     200)
+win_win_configurable_title_title_time = Obj(pg.image.load('img/brick_.png'), (480, 390), (240, 130), 'title_Time',
+                                            'title', 'Time')
+win_win_configurable_title_time = Obj(pg.image.load('img/brick_.png'), (480, 585), (240, 130), 'Time', 'title',
+                                      '00:00:00:00', 40)
+win_win_configurable_title_title_radius = Obj(pg.image.load('img/brick_.png'), (840, 390), (240, 130), 'title_Radius',
+                                              'title', 'Radius')
+win_win_configurable_title_radius = Obj(pg.image.load('img/brick_.png'), (840, 585), (240, 130), 'Radius', 'title',
+                                        '11')
+
+win_win_configurable_btn_restart = Obj(pg.image.load('img/brick_.png'), (120, 390), (240, 130), 'Restart', 'btn',
+                                       'Restart', 50)
+win_win_configurable_btn_menu = Obj(pg.image.load('img/brick_.png'), (120, 585), (240, 130), 'Menu', 'btn', 'Menu')
+
+win_win_configurable.add_obj(win_win_configurable_title_win)
+win_win_configurable.add_obj(win_win_configurable_title_title_time)
+win_win_configurable.add_obj(win_win_configurable_title_time)
+win_win_configurable.add_obj(win_win_configurable_title_title_radius)
+win_win_configurable.add_obj(win_win_configurable_title_radius)
+win_win_configurable.add_obj(win_win_configurable_btn_menu)
+win_win_configurable.add_obj(win_win_configurable_btn_restart)
+
+# окно победы после сложности
+win_win_hard = Window((1200, 800), MENU_BACK)
+
+win_win_hard_title_win = Obj(pg.image.load('img/brick_.png'), (120, 65), (960, 260), 'You win', 'title',
+                             'You win', 200)
+win_win_hard_title_title_time = Obj(pg.image.load('img/brick_.png'), (650, 390), (200, 130), 'title_Time',
+                                    'title', 'Time')
+win_win_hard_title_time = Obj(pg.image.load('img/brick_.png'), (650, 585), (200, 130), 'Time', 'title',
+                              '00:00:00:00', 35)
+win_win_hard_title_title_hard = Obj(pg.image.load('img/brick_.png'), (350, 390), (200, 130), 'title_Hard',
+                                    'title', 'Hard')
+win_win_hard_title_hard = Obj(pg.image.load('img/brick_.png'), (350, 585), (200, 130), 'Hard', 'title',
+                              '11')
+
+win_win_hard_btn_restart = Obj(pg.image.load('img/brick_.png'), (50, 390), (200, 130), 'Restart', 'btn',
+                               'Restart', 50)
+win_win_hard_btn_menu = Obj(pg.image.load('img/brick_.png'), (50, 585), (200, 130), 'Menu', 'btn', 'Menu')
+
+win_win_hard_title_title_record = Obj(pg.image.load('img/brick_.png'), (950, 390), (200, 130), 'title_Record',
+                                      'title', 'Record')
+win_win_hard_title_record = Obj(pg.image.load('img/brick_.png'), (950, 585), (200, 130), 'Score', 'title',
+                                '00:00:00:00', 35)
+
+win_win_hard.add_obj(win_win_hard_title_win)
+win_win_hard.add_obj(win_win_hard_title_title_time)
+win_win_hard.add_obj(win_win_hard_title_time)
+win_win_hard.add_obj(win_win_hard_title_title_hard)
+win_win_hard.add_obj(win_win_hard_title_hard)
+win_win_hard.add_obj(win_win_hard_btn_menu)
+win_win_hard.add_obj(win_win_hard_btn_restart)
+win_win_hard.add_obj(win_win_hard_title_title_record)
+win_win_hard.add_obj(win_win_hard_title_record)
+
+
+def play_configurable():
     win_game.new_maze(int(win_configurable_mode_spin_radius.text_))
+    win_game.drawing.time_now = 100 * int(win_configurable_mode_spin_time.text_)
+    win_game.drawing.setting_time = 100 * int(win_configurable_mode_spin_time.text_)
+    win_game.drawing.count_time = 0
+    win_game.window_win = win_win_configurable
+    win_game.win_run = win_win_configurable.run
+
     win_game.run()
+
+
+def play_hard():
+    r = 11
+    hard = int(win_hard_mode_spin_hard.text_)
+    for i in range(hard - 1):
+        r += 4 + i % 2
+    time_ = 40 + hard * 48
+    win_game.new_maze(r)
+    win_game.drawing.time_now = 100 * time_
+    win_game.drawing.setting_time = 100 * time_
+    win_game.drawing.count_time = 0
+    win_game.window_win = win_win_hard
+    win_game.win_run = win_win_hard.run
+    win_game.hard = str(hard)
+    win_game.run()
+
+
+def restart():
+    win_game.new_maze(win_game.radius)
+    win_game.run()
+
+
+def score():
+    conn = sq.connect('GAME.db')
+    cur_ = conn.cursor()
+    maze = win_hard_mode.objs['Spin hard'].text_
+    info = cur_.execute(
+        f'SELECT Time FROM records WHERE Maze="{maze}" and ID_player in (SELECT ID_Player FROM players WHERE Name="{Name[0]}") ').fetchall()
+    if info:
+        score_ = str(min([time(*[int(i) for i in g[0].split(':')]) for g in info]))
+    else:
+        score_ = 'None'
+    win_hard_mode.objs['Score'].text_ = score_
+    win_hard_mode.objs['Score'].update_text()
+
+    # if not len(info):
+    #     ids = cur_.execute(f'SELECT [ID_Player] FROM players ').fetchall()
+    #     try:
+    #         id_ = max([i[0] for i in ids]) + 1
+    #     except ValueError:
+    #         id_ = 0
+    #     cur_.execute(f"INSERT INTO players VALUES({id_}, '{name}', '{password}')")
+    #     conn.commit()
+    #     Name[0] = name
+    #     return True
+    # if password == info[0][0]:
+    #     Name[0] = name
+    #     return True
+    # return False
+
+
+#
+# score()
 
 
 def logining():
     fl = logining_(win_login_input_login.text_, win_login_input_password.text_)
     if not fl or not win_login_input_login.text_ or not win_login_input_password.text_:
         return win_invalid_password.run()
+    score()
     return win_menu.run()
 
 
@@ -271,6 +401,8 @@ def update_all_win():
     win_account.update_back(back)
     win_menu_textures.update_back(back)
     win_textures.update_back(back)
+    win_win_configurable.update_back(back)
+    win_win_hard.update_back(back)
 
 
 def update_all_win_3D():
@@ -296,7 +428,9 @@ def update_textures_Grey_brick():
     SELECTED_TEXTURES[0] = TEXTURES['Grey brick']
     update_all_win()
 
-
+def win_hard_mode_run():
+    score()
+    win_hard_mode.run()
 # прикрепление функций к кнопкам
 
 
@@ -304,17 +438,18 @@ win_login.update_obj_fun('Play', logining)
 
 win_invalid_password.update_obj_fun('Back', win_login.run)
 
-win_menu.update_obj_fun('Play', win_configurable_mode.run)
+win_menu.update_obj_fun('Play', win_hard_mode_run)
 win_menu.update_obj_fun('Settings', win_settings.run)
 
-win_configurable_mode.update_obj_fun('Hard mode', win_hard_mode.run)
+win_configurable_mode.update_obj_fun('Hard mode', win_hard_mode_run)
 win_configurable_mode.update_obj_fun('Menu', win_menu.run)
 
-win_configurable_mode.update_obj_fun('Play', play)
+win_configurable_mode.update_obj_fun('Play', play_configurable)
 
 win_hard_mode.update_obj_fun('Configurable mode', win_configurable_mode.run)
 win_hard_mode.update_obj_fun('Menu', win_menu.run)
-win_hard_mode.update_obj_fun('Play', play)
+win_hard_mode.update_obj_fun('Play', play_hard)
+win_hard_mode.update_obj_fun('Spin hard', score)
 # windows = [win_menu]
 # def f():
 #     global MENU_BACK
@@ -323,7 +458,7 @@ win_hard_mode.update_obj_fun('Play', play)
 #         i.obj = MENU_BACK
 #         i.back = MENU_BACK.run
 win_pause.update_obj_fun('Menu', win_menu.run)
-win_pause.update_obj_fun('Restart', play)
+win_pause.update_obj_fun('Restart', restart)
 win_pause.update_obj_fun('Play', win_game.run)
 
 win_settings.update_obj_fun('Sound', win_sound.run)
@@ -349,5 +484,23 @@ win_textures.update_obj_fun('Red brick', update_textures_Red_brick)
 win_textures.update_obj_fun('Grey brick', update_textures_Grey_brick)
 win_textures.update_obj_fun('Back', win_settings.run)
 
+win_win_configurable.update_obj_fun('Menu', win_menu.run)
+win_win_configurable.update_obj_fun('Restart', restart)
+
+win_win_hard.update_obj_fun('Menu', win_menu.run)
+win_win_hard.update_obj_fun('Restart', restart)
+
 # update_all_win()
 win_login.run()
+# win = Window((1200, 800), MENU_BACK)
+# btn = Obj(pg.image.load('img/brick_.png'), (650, 200), (250, 150), 'button', 'btn',
+#           'button', go_next_win=False)
+# inputBox = InputBox(pg.image.load('img/brick_.png'), (300, 200), (250, 150), 'Input', 'btn',
+#                     '')
+# title = Obj(pg.image.load('img/brick_.png'), (300, 450), (250, 150), 'title', 'title', 'title')
+# spin = Obj(pg.image.load('img/brick_.png'), (650, 450), (250, 150), 'spin', 'spin', '0', min_max=[0, 10])
+# # win.add_obj(btn)
+# # win.add_obj(inputBox)
+# # win.add_obj(title)
+# # win.add_obj(spin)
+# win.run()

@@ -7,6 +7,10 @@ import datetime
 
 class Drawing:
     def __init__(self, obj):
+        self.obj = obj
+        self.time_now = time_now
+        self.setting_time = self.time_now
+        self.count_time = count_time
         self.flag = True
         self.Name = Name
         self.sc = obj.screen
@@ -26,8 +30,6 @@ class Drawing:
                 self.map[start + i][start + g] = 1
                 self.map_arr[self.MAZE.check_quat(start + g, start + i)].append((start + g, start + i))
 
-
-
     def background(self):
         # Рисуем землю и небо
         pygame.draw.rect(self.sc, SKYBLUE, (0, 0, WIDTH, HALF_HEIGHT))
@@ -39,24 +41,27 @@ class Drawing:
                 i, object, object_pos = obj
                 self.sc.blit(object, object_pos)
 
-    def time_clock(self, game):
+    def time_clock(self, game, sector):
+        global quat_update
         # таймер
-        global time_now, count_time
-        time_now -= 1
-        display_time = str(time_now)
+        self.time_now -= 1
+        display_time = str(self.time_now)
         if int(display_time) <= zero:
             game.all_update()
-            count_time += 1
-            time_now = setting_time
-            display_time = str(time_now)
-        if len(display_time) >= 5:
+            self.count_time += 1
+            self.time_now = self.setting_time
+            display_time = str(self.time_now)
+        if int(display_time) >= 6000:
             display_time = str(int(display_time[:-2]) // 60) + ":" + str(
                 int(display_time[:-2]) % 60) + ":" + display_time[-2:]
         elif len(display_time) >= 3:
             display_time = display_time[:-2] + ":" + display_time[-2:]
+            if int(display_time[:-3]) in (0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10) and not int(display_time[-2:]):
+                END_COUNT.play(maxtime=500)
         else:
             display_time = "00" + ":" + display_time[-2:]
-        display_time = "Update: " + display_time
+        # print(display_time)
+        display_time = f"Update {quat_update + 1} sector: " + display_time
         render = self.font.render(display_time, 0, BLACK)
         self.sc.blit(render, TIME_POS)
 
@@ -65,6 +70,11 @@ class Drawing:
         display_fps = str(int(clock.get_fps()))
         render = self.font.render(display_fps, 0, RED)
         self.sc.blit(render, FPS_POS)
+
+    def pozicion(self, sector):
+        display_fps = str(f"You are in sector: {sector + 1}")
+        render = self.font.render(display_fps, 0, RED)
+        self.sc.blit(render, POS_POS)
 
     def chek_win(self, player_pos, time):
         if player_pos[0] < 0:
@@ -75,12 +85,6 @@ class Drawing:
                 self.win(time)
 
     def win(self, time):
-        render = self.font_win.render("YOU WIN", 1, (randrange(0, 255), randrange(0, 255), randrange(0, 255)))
-        rect = pygame.Rect(0, 0, 1000, 300)
-        rect.center = HALF_WIDTH, HALF_HEIGHT
-        pygame.draw.rect(self.sc, BLACK, rect, border_radius=50)
-        self.sc.blit(render, (rect.centerx - 430, rect.centery - 140))
-        pygame.display.flip()
         if self.flag:
             set_time = str(datetime.datetime.now() - time)
             set_time = set_time[:set_time.index(".")].split(":")
@@ -88,18 +92,55 @@ class Drawing:
             # print(datetime.timedelta(hours=0, minutes=count_time * setting_time // 100 // 60,
             #                          seconds=count_time * setting_time // 100 % 60))
             game_time = datetime.timedelta(hours=int(set_time[0]), minutes=int(set_time[1]), seconds=int(set_time[2]))
-            update_time = datetime.timedelta(hours=0, minutes=count_time * setting_time // 100 // 60,
-                                             seconds=count_time * setting_time // 100 % 60)
+            update_time = datetime.timedelta(hours=0, minutes=self.count_time * self.setting_time // 100 // 60,
+                                             seconds=self.count_time * self.setting_time // 100 % 60)
             self.flag = False
-            a = cur.execute(f"""SELECT ID_Player
-                            FROM players
-                            WHERE players.Name = "{Name[0]}"
-                            """).fetchall()
-            print(game_time)
-            print(update_time)
-            print(game_time + update_time)
-            con.execute(f"INSERT INTO records VALUES('{int(a[0][0])}', '{ RADIUS}', '{game_time + update_time}')")
-            con.commit()
+
+            self.obj.window_win.objs['Time'].text_ = str(game_time + update_time)
+            self.obj.window_win.objs['Time'].update_text()
+            try:
+                self.obj.window_win.objs['Radius'].text_ = str(self.obj.radius)
+                self.obj.window_win.objs['Radius'].update_text()
+            except KeyError:
+                # print(game_time + update_time)
+                flag = False
+                conn = sq.connect('GAME.db')
+                cur_ = conn.cursor()
+                info = cur_.execute(
+                    f'SELECT Time FROM records WHERE Maze="{self.obj.hard}" and ID_player in (SELECT ID_Player FROM players WHERE Name="{Name[0]}") ').fetchall()
+                if info:
+                    flag = False
+                    arr = info[0][0].split(':')
+                    score_ = datetime.timedelta(hours=int(arr[0]), minutes=int(arr[1]), seconds=int(arr[2]))
+                else:
+                    score_ = 'None'
+                    flag = not False
+
+                if flag or score_ > game_time + update_time:
+                    score_ = game_time + update_time
+                    a = cur.execute(f"""SELECT ID_Player
+                                               FROM players
+                                               WHERE players.Name = "{Name[0]}"
+                                               """).fetchall()
+                    print(a)
+                    con.execute(
+                        f'DELETE FROM records WHERE ID_player in ('
+                        f'SELECT ID_Player FROM players WHERE Name="{Name[0]}") ').fetchall()
+                    con.execute(
+                        f"INSERT INTO records VALUES('{int(a[0][0])}', '{self.obj.hard}', '{game_time + update_time}')")
+
+                    con.commit()
+                print(f'{score_}')
+                self.obj.window_win.objs['Hard'].text_ = str(self.obj.hard)
+                self.obj.window_win.objs['Hard'].update_text()
+                self.obj.window_win.objs['Score'].text_ = f'{score_}'
+                self.obj.window_win.objs['Score'].update_text()
+            self.obj.player.steping = False
+            STEP_SOUND.stop()
+
+            self.obj.win_run()
+            self.obj.pause_run()  # self.obj.win_run() когда будет готово окно победы
+
         self.clock.tick(15)
 
     def minimap(self, player_pos, angel, m=tuple()):
@@ -152,9 +193,9 @@ class Drawing:
 
     def minimap_fill_quat(self):
         arr = []
-        # print(sorted(self.map_arr[0]),sorted(self.MAZE.maze_sekt[0].road), sep='\n')
+        # print(sorted(list(set(self.map_arr[0]))), sorted(list(set(self.MAZE.maze_sekt[0].road))), sep='\n')
         for i in range(4):
-            if sorted(self.map_arr[i]) == sorted(self.MAZE.maze_sekt[i].road):
+            if sorted(list(set(self.map_arr[i]))) == sorted(list(set(self.MAZE.maze_sekt[i].road))):
                 # print('ok')
                 arr.append(i)
 

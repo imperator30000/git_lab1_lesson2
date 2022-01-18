@@ -87,15 +87,12 @@ class Player:
             self.detect_collision(dx, dy, self.coll_walls)
             step = True
 
-
         if step and not self.steping:
-            self.steping =  True
+            self.steping = True
             STEP_SOUND.play(-1)
         if not step and self.steping:
             self.steping = False
             STEP_SOUND.stop()
-
-
 
         # if animation_hands and drawing:
         #     self.sensitivity *= 5

@@ -45,6 +45,11 @@ class Obj:
                 self.text_ = str(text_ + self.step_spin * k)
                 self.update_text()
                 self.fun()
+            keys = pg.key.get_pressed()
+            if keys[pg.K_SPACE] and self.min_max[0] <= text_ + 10 * k <= self.min_max[1] and a:
+                self.text_ = str(text_ + 10 * k)
+                self.update_text()
+                self.fun()
 
     def update_text(self):
         self.text = self.font.render(self.text_, True, (0, 0, 0)).convert_alpha()
@@ -178,7 +183,8 @@ class Window:
         self.m_action = [False, False, False, False]  # движение нажатие
         self.m_pos = (-1, -2)
         # self.obj = obj(self)
-        self.obj = MENU_BACK(self, SELECTED_TEXTURES[0])
+        # self.obj = MENU_BACK(self, SELECTED_TEXTURES[0])
+        self.obj = obj(self, SELECTED_TEXTURES[0])
 
 
     def update_back(self, back):
