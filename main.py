@@ -66,7 +66,6 @@ class Game:
         except AttributeError:
             self.drawing = Drawing(self)
 
-
     def run(self):
         now = datetime.datetime.now()
         pygame.mouse.set_visible(False)
@@ -95,7 +94,7 @@ class Game:
             # print(self.save_minimap_setting)
             self.drawing.minimap(self.player.pos, self.player.angle, self.save_minimap_setting)
             # self.save_minimap_setting = []
-            # print(self.drawing.minimap_fill_quat())
+            print(self.drawing.minimap_fill_quat())
             # счётчик фпсD
             self.drawing.fps(self.clock)
             self.drawing.chek_win(self.player.pos, now)
@@ -107,7 +106,7 @@ class Game:
     def all_update(self):
         global quat_update
 
-        player_quat = self.MAZE.check_quat(int(self.player.pos[0]//100), int(self.player.pos[1]//100), walls=True)
+        player_quat = self.MAZE.check_quat(int(self.player.pos[0] // 100), int(self.player.pos[1] // 100), walls=True)
         # print(quat_update, player_quat)
         new_pos = player_quat == quat_update
 

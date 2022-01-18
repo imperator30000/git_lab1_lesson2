@@ -193,9 +193,9 @@ class Drawing:
 
     def minimap_fill_quat(self):
         arr = []
-        # print(sorted(self.map_arr[0]),sorted(self.MAZE.maze_sekt[0].road), sep='\n')
+        print(sorted(list(set(self.map_arr[0]))),sorted(list(set(self.MAZE.maze_sekt[0].road))), sep='\n')
         for i in range(4):
-            if sorted(self.map_arr[i]) == sorted(self.MAZE.maze_sekt[i].road):
+            if sorted(list(set(self.map_arr[i]))) == sorted(list(set(self.MAZE.maze_sekt[i].road))):
                 # print('ok')
                 arr.append(i)
 
