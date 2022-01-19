@@ -41,8 +41,7 @@ class Drawing:
                 i, object, object_pos = obj
                 self.sc.blit(object, object_pos)
 
-    def time_clock(self, game, sector):
-        global quat_update
+    def time_clock(self, game, sector, vere):
         # таймер
         self.time_now -= 1
         display_time = str(self.time_now)
@@ -60,8 +59,7 @@ class Drawing:
                 END_COUNT.play(maxtime=500)
         else:
             display_time = "00" + ":" + display_time[-2:]
-        # print(display_time)
-        display_time = f"Update {quat_update + 1} sector: " + display_time
+        display_time = f"Update {vere + 1} sector: " + display_time
         render = self.font.render(display_time, 0, BLACK)
         self.sc.blit(render, TIME_POS)
 
