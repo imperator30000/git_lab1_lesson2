@@ -14,7 +14,7 @@ HALF_HEIGHT = HEIGHT // 2
 PENTA_HIGHT = 5 * HEIGHT
 
 # Количество кадров
-FPS = 45
+FPS = 1000
 # Размер квадрата карты
 RADIUS = 11
 
@@ -79,21 +79,6 @@ con_2.commit()
 FLAG = True
 
 
-def data_base(name, password):
-    global Name
-    cur = con.cursor()
-    info = cur.execute('SELECT * FROM players WHERE Name=? and Password=?', (name, password))
-    if info.fetchone() is None:
-        print("Вас нету в базе")
-        print("добавляю вас")
-        con.execute("INSERT INTO records VALUES(?, ?, ?)",
-                    (1, name, password))
-        return False
-    else:
-        Name[0] = name
-        return True
-
-
 def logining_(name, password):
     global Name
     conn = sq.connect('GAME.db')
@@ -124,7 +109,7 @@ BACK_MUZ = pg.mixer.Sound('back_mus.wav')
 CLICK_SOUND = pg.mixer.Sound("click.wav")
 STEP_SOUND = pg.mixer.Sound('step.wav')
 END_COUNT = pg.mixer.Sound('end.wav')
-BACK_MUZ.set_volume(VOLUME[0])
+BACK_MUZ.set_volume(VOLUME[1])
 CLICK_SOUND.set_volume(VOLUME[1])
 STEP_SOUND.set_volume(VOLUME[2])
 END_COUNT.set_volume(VOLUME[2])
