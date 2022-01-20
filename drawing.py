@@ -77,7 +77,7 @@ class Drawing:
         self.sc.blit(render, POS_POS)
 
     def chek_win(self, player_pos, time):
-        if player_pos[0] < 0:
+        if player_pos[0] // 100 == 0:
             while True:
                 for event in pygame.event.get():
                     if event.type == pygame.QUIT:
