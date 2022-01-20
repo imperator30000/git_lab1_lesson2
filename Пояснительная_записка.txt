@@ -31,6 +31,47 @@ math
 4)MazeBack - класс 2D фона в меню
 5)PyShader - класс 3D фона в меню
 
+Игра
+drowing.py
+	Class Drowing
+	__init__()
+	background - рисует небо и землю
+	world - рисует объекты на карте
+	time_clock - таймер
+	fps - счётчик кадров
+	pozicion - показывает в каком секторе вы находитесь
+	chek_win - проверка прошёл ли пользователь лабиринт
+	win - окно окончания игры/подсчёт времени/добвыление результата в базу данных 
+	minimap - миникарта
+	minimap_clear_quat - очистка маршрутов миникарты
+	minimap_fill_quay - закрашивание путей на миникарте
+
+player.py
+	Class Player
+	__init__()
+	pos -возвращает позицию игрока
+ 	detect_collision - функция не дающая проходить сквозь стены
+	movement - ходьба
+	mouse_control - повороты игрока при помощи мыши
+
+main.py
+	Class Game
+	__init__()
+	new_maze - новая игра
+	run - основной цикл игры
+	all_update -обновление карты
+
+map.py
+	create_map - создание списка стен и карты
+	
+ray_castting.py
+	mapping - координаты левого верхнего угла квадрата в котором мы находимся
+	ray_casting - растояние до стены и её размеры
+	ray_casting_walls - Список стен
+
+settings.py
+	файл с настройками
+
 
 База Game.db
 Таблицы: players, records
