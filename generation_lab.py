@@ -263,6 +263,12 @@ class Maze:
                 return 4
         return 4
 
+    def in_walls(self, x, y):
+        if self.maze[int(y)][int(x)]:
+            return True
+
+        return False
+
     def info(self):
         arr = self.line()
         # print(f'Проход между 1 и 2 сектором: x = {arr[1]} y = {arr[0]}')

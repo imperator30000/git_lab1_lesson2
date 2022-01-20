@@ -65,7 +65,7 @@ class Game:
             if keys[pygame.K_ESCAPE]:
                 self.pause_run()
 
-            self.player.movement(self.collision_walls)  # Ходьба
+            self.player.movement(self.collision_walls, self.MAZE.in_walls)  # Ходьба
             # Обновляем экран на каждой итэрации
             pygame.display.flip()
             # Черный фон
