@@ -6,9 +6,6 @@ from numba import int64
 
 
 # карта
-# Для определения правильной длины луча\
-# print(*MAZE.maze, sep='\n', end='\n-----\n')
-# print(*game_map, sep='\n', end='\n-----\n')
 def create_map(game_map):
     WORLD_WIDTH = len(game_map[0]) * TILE
     WORLD_HEIGHT = len(game_map) * TILE

@@ -4,7 +4,7 @@ import taichi as ti
 import taichi_glsl as ts
 from taichi_glsl import vec2, vec3
 
-ti.init(arch=ti.gpu)  # ti.cpu ti.gpu ti.vulkan ti.opengl ti.metal(macOS)
+ti.init(arch=ti.vulkan)  # ti.cpu ti.gpu ti.vulkan ti.opengl ti.metal(macOS)
 resolution = width, height = vec2(1200, 800)
 
 
@@ -37,7 +37,6 @@ class PyShader:
 
             # polar coords
             phi = ts.atan(uv.y, uv.x)
-            # rho = ts.length(uv)
             rho = pow(pow(uv.x ** 2, 10) + pow(uv.y ** 2, 100), 0.15)
             st = vec2(phi / ts.pi * 2, 0.25 / rho)
             st.x += 0
@@ -45,12 +44,11 @@ class PyShader:
             col += self.texture_field[st * self.texture_size]
 
             col *= rho + 0.00001
-            # col += 0.1 / rho * vec3(0.1, 0.1, 0.4)
             col = ts.clamp(col, 0.0, 1.0)
             self.screen_field[frag_coord.x, resolution.y - frag_coord.y] = col * 255
 
     def update(self):
-        time = pg.time.get_ticks() * 0.001  # time in sec
+        time = pg.time.get_ticks() * 0.005  # time in sec
         self.render(time)
         self.screen_array = self.screen_field.to_numpy()
 

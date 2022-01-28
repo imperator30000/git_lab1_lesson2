@@ -59,9 +59,6 @@ win_settings.add_obj(win_settings_btn_account)
 win_settings.add_obj(win_settings_btn_textures)
 win_settings.add_obj(win_settings_btn_menu_textures)
 win_settings.add_obj(win_settings_btn_back)
-# win_settings.add_obj(win_configurable_mode_spin_radius)
-# win_settings.run()
-
 
 # звук
 
@@ -96,7 +93,6 @@ win_sound.add_obj(win_sound_title_all)
 win_sound.add_obj(win_sound_spin_all, ['Spin music', 'Spin menu', 'Spin game', 'All', 'Music', 'Menu', 'Game'])
 win_sound.add_obj(win_sound_btn_back)
 
-# win_sound.run()
 # аккаунт
 
 win_account = Window((1200, 800), MENU_BACK)
@@ -108,7 +104,6 @@ win_account_btn_back = Obj(pg.image.load('img/brick_.png'), (300, 450), (600, 15
 win_account.add_obj(win_account_btn_account)
 win_account.add_obj(win_account_btn_back)
 
-# win_account.run()
 # текстуры
 
 win_textures = Window((1200, 800), MENU_BACK)
@@ -210,8 +205,6 @@ win_pause_btn_menu = Obj(pg.image.load('img/brick_.png'), (840, 350), (240, 100)
 win_pause.add_obj(win_pause_btn_play)
 win_pause.add_obj(win_pause_btn_restart)
 win_pause.add_obj(win_pause_btn_menu)
-
-# win_pause.run()
 
 # игра
 win_game = Game()
@@ -323,25 +316,6 @@ def score():
     win_hard_mode.objs['Score'].text_ = score_
     win_hard_mode.objs['Score'].update_text()
 
-    # if not len(info):
-    #     ids = cur_.execute(f'SELECT [ID_Player] FROM players ').fetchall()
-    #     try:
-    #         id_ = max([i[0] for i in ids]) + 1
-    #     except ValueError:
-    #         id_ = 0
-    #     cur_.execute(f"INSERT INTO players VALUES({id_}, '{name}', '{password}')")
-    #     conn.commit()
-    #     Name[0] = name
-    #     return True
-    # if password == info[0][0]:
-    #     Name[0] = name
-    #     return True
-    # return False
-
-
-#
-# score()
-
 
 def logining():
     fl = logining_(win_login_input_login.text_, win_login_input_password.text_)
@@ -406,14 +380,12 @@ def update_all_win():
 
 
 def update_all_win_3D():
-    # SELECTED_TEXTURES[0] = TEXTURES['Red brick']
     global MENU_BACK
     MENU_BACK = PyShader
     update_all_win()
 
 
 def update_all_win_2D():
-    # SELECTED_TEXTURES[0] = TEXTURES['Red brick']
     global MENU_BACK
     MENU_BACK = MazeBack
     update_all_win()
@@ -428,9 +400,12 @@ def update_textures_Grey_brick():
     SELECTED_TEXTURES[0] = TEXTURES['Grey brick']
     update_all_win()
 
+
 def win_hard_mode_run():
     score()
     win_hard_mode.run()
+
+
 # прикрепление функций к кнопкам
 
 
@@ -450,13 +425,7 @@ win_hard_mode.update_obj_fun('Configurable mode', win_configurable_mode.run)
 win_hard_mode.update_obj_fun('Menu', win_menu.run)
 win_hard_mode.update_obj_fun('Play', play_hard)
 win_hard_mode.update_obj_fun('Spin hard', score)
-# windows = [win_menu]
-# def f():
-#     global MENU_BACK
-#     MENU_BACK = MENU_BACK_dict['Maze 3D']
-#     for i in windows:
-#         i.obj = MENU_BACK
-#         i.back = MENU_BACK.run
+
 win_pause.update_obj_fun('Menu', win_menu.run)
 win_pause.update_obj_fun('Restart', restart)
 win_pause.update_obj_fun('Play', win_game.run)
@@ -490,17 +459,4 @@ win_win_configurable.update_obj_fun('Restart', restart)
 win_win_hard.update_obj_fun('Menu', win_menu.run)
 win_win_hard.update_obj_fun('Restart', restart)
 
-# update_all_win()
-win_menu.run()
-# win = Window((1200, 800), MENU_BACK)
-# btn = Obj(pg.image.load('img/brick_.png'), (650, 200), (250, 150), 'button', 'btn',
-#           'button', go_next_win=False)
-# inputBox = InputBox(pg.image.load('img/brick_.png'), (300, 200), (250, 150), 'Input', 'btn',
-#                     '')
-# title = Obj(pg.image.load('img/brick_.png'), (300, 450), (250, 150), 'title', 'title', 'title')
-# spin = Obj(pg.image.load('img/brick_.png'), (650, 450), (250, 150), 'spin', 'spin', '0', min_max=[0, 10])
-# # win.add_obj(btn)
-# # win.add_obj(inputBox)
-# # win.add_obj(title)
-# # win.add_obj(spin)
-# win.run()
+win_login.run()

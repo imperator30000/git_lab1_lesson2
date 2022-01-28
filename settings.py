@@ -21,6 +21,7 @@ RADIUS = 11
 TILE = 100
 FPS_POS = (WIDTH - 65, 5)
 TIME_POS = (5, 170)
+POS_POS = (5, 200)
 
 setting_time = time_now = 300 * 100
 zero = 0
@@ -56,13 +57,6 @@ DARKGRAY = (40, 40, 40)
 PURPLE = (120, 0, 120)
 SKYBLUE = (0, 186, 255)
 YELLOW = (220, 220, 0)
-
-# anim__ = deque(
-#     [pygame.transform.scale(pygame.image.load(f'images/анимация/{i}.png'), (WIDTH, HEIGHT)) for i in range(21)])
-# animation_hands = True
-# animation_hands_counter = 0
-#
-# c = 0
 
 Name = ['qw']
 with sq.connect("GAME.db") as con:
@@ -120,11 +114,7 @@ def logining_(name, password):
         return True
     return False
 
-#
-# logining('Pivo', 'qwerty')
-# logining('Pivo', 'qwerty1')
-# logining('Pivo1', 'qwerty')
-# меню
+
 TEXTURES = {'Red brick': pg.image.load('images/2.png'), 'Grey brick': pg.image.load('images/1.png')}
 SELECTED_TEXTURES = [TEXTURES['Grey brick']]
 MENU_BACK_dict = {'Maze 2D': MazeBack, 'Maze 3D': PyShader}

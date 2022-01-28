@@ -44,31 +44,24 @@ class Player:
         self.x += dx
         self.y += dy
 
-    def movement(self, coll_walls, drawing=None):
-        # self.keys_control(drawing)
+    def movement(self, coll_walls):
         self.mouse_control()
         self.rect.center = self.x, self.y
         self.coll_walls = coll_walls
 
         # # Отслеживаем нажатые клавиши и меняем значение отрибутов
         # # Движимся относительно линии взгляда
-        # def keys_control(self, drawing=None):
-        #     global animation_hands_counter
-        #     self.sensitivity = 0.00001
 
-        animation_hands = False
         sin_a = math.sin(self.angle)
         cos_a = math.cos(self.angle)
         keys = pygame.key.get_pressed()
-        # if keys[pygame.K_ESCAPE]:
-        #     exit()
+
         step = False
-        # if self.steping:
-        #     STEP_SOUND.play(-1)
+
         if keys[pygame.K_w]:
             dx = player_speed * cos_a
             dy = player_speed * sin_a
-            animation_hands = True
+
             self.detect_collision(dx, dy, self.coll_walls)
             step = True
         if keys[pygame.K_s]:
@@ -93,11 +86,6 @@ class Player:
         if not step and self.steping:
             self.steping = False
             STEP_SOUND.stop()
-
-        # if animation_hands and drawing:
-        #     self.sensitivity *= 5
-
-        # animation_hands_counter = drawing.anim(anim__, 1, animation_hands_counter)
 
     def mouse_control(self):
         if pygame.mouse.get_focused():

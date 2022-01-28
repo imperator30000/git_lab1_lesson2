@@ -1,6 +1,4 @@
 import random
-import sys
-import pygame
 
 
 class Road:
@@ -53,21 +51,6 @@ class Road:
 
                 else:
                     run = False
-        # c = 10
-        # for i in self.maps:
-        #     print('\n', c, end='')
-        #     for g in i:
-        #         if g == self.num:
-        #             print(0, end='')
-        #         elif g == 9:
-        #             print(' ', end='')
-        #         else:
-        #             print('_', end='')
-        #     c += 1
-        # for i in range(len(self.maps)):
-        #     for g in range(len(self.maps[0])):
-        #         if self.maps[i][g] == self.num:
-        #             self.road.append([g, i])
 
     def check_pos(self, pos):
         positions = [[pos[0], pos[1] - 2],
@@ -176,22 +159,6 @@ class Maze:
             y -= 1
             delta += 2 * (x - y)
 
-        # c -= 1
-        # arr = [[[[Y1 - y], [X1 + x]], [[R - c + 1], [X1 + c]]],
-        #        [[[Y1 - y], [X1 - x]], [[R - c + 1], [X1 - c + 1]]],
-        #        # [[[Y1 + x], [X1 + y]], [[Y1 - c + 1], [R + c - 1]]],
-        #        # [[[Y1 - x], [X1 + y]], [[Y1 + c], [R + c - 1]]],
-        #        [[[Y1 + y], [X1 + x]], [[R + c - 1], [X1 - c]]],
-        #        [[[Y1 + y], [X1 - x]], [[R + c - 1], [X1 + c - 1]]],
-        #        # [[[Y1 + x], [X1 - y]], [[Y1 - c], [R - c + 1]]],
-        #        # [[[Y1 - x], [X1 - y]], [[Y1 + c - 1], [R - c + 1]]],
-        #        ]
-        # arr = [[(i[0][1][0] + i[1][1][0]) // 2, (i[0][0][0] + i[1][0][0]) // 2] for i in arr]
-        # arr_ = [arr1, arr2, arr3, arr4]
-        # print(arr)
-        # for i in range(len(arr)):
-        #     arr_[i // 2][arr[i][1]][arr[i][0]] = 9
-
         def fun1(arr):
             ans = []
             for i in range(len(arr)):
@@ -210,20 +177,7 @@ class Maze:
                         ans.append([g, i])
             return ans
 
-        #
-        # print(*arr, sep='\n', end='\n======================================================================\n')
-        # print(*arr1, sep='\n', end='\n======================================================================\n')
-        # print(*arr2, sep='\n', end='\n======================================================================\n')
-        # print(*arr3, sep='\n', end='\n======================================================================\n')
-        # print(*arr4, sep='\n', end='\n======================================================================\n')
         self.maze_sekt_arr = [fun1(arr1), fun1(arr2), fun1(arr3), fun1(arr4)]
-        # print(self.maze_sekt_arr)
-
-        # print(*arr, sep='\n', end='\n======================================================================\n')
-        # print(*arr1, sep='\n', end='\n======================================================================\n')
-        # print(*arr2, sep='\n', end='\n======================================================================\n')
-        # print(*arr3, sep='\n', end='\n======================================================================\n')
-        # print(*arr4, sep='\n', end='\n======================================================================\n')
 
         koor = [[R + 1, R - 1 - self.k], [R + 1 + self.k, R + 1], [R - 1, R + 1 + self.k], [R - 1 - self.k, R - 1]]
         roads = [arr1, arr2, arr3, arr4]
@@ -256,12 +210,7 @@ class Maze:
             self.maze_sekt[0].road.append((self.r, self.r - 5))
         if (1, self.r - 1) not in self.maze_sekt[3].road:
             self.maze_sekt[3].road.append((1, self.r - 1))
-        # print(*arr, sep='\n', end='\n======================================================================\n')
-        # print(*arr1, sep='\n', end='\n======================================================================\n')
-        # print(*arr2, sep='\n', end='\n======================================================================\n')
-        # print(*arr3, sep='\n', end='\n======================================================================\n')
-        # print(*arr4, sep='\n', end='\n======================================================================\n')
-        # print(ans)
+
         self.arr = arr
 
     def update_sek(self, num):
@@ -287,7 +236,6 @@ class Maze:
                 else:
                     arr[i].append(9)
 
-        # print(*arr, sep='\n')
         self.maze = arr
         self.line()
 
@@ -303,11 +251,6 @@ class Maze:
             self.maze) - self.l3 - 2, [(self.l1 + self.r % 2, len(self.maze) - self.l1 - self.r % 2),
                                        (self.l2, self.l2 + 1), (len(self.maze) - self.l3 - 2, self.l3)]
 
-    # [(0, self.r - 1), (1, self.r - 1), (self.r, self.r - self.k),
-    #  (self.r, self.r - self.k + 1),
-    #  (self.l1 + self.r % 2, len(self.maze) - self.l1 - self.r % 2),
-    #  (self.l2, self.l2 + 1), (len(self.maze) - self.l3 - 2, self.l3)]
-
     def check_quat(self, x=0, y=0, fl=False, walls=False):
         if fl and x == self.r and y in (self.r - self.k, self.r - self.k + 1):
             return 0
@@ -320,8 +263,6 @@ class Maze:
                 return 4
         return 4
 
-
-
     def info(self):
         arr = self.line()
         # print(f'Проход между 1 и 2 сектором: x = {arr[1]} y = {arr[0]}')
@@ -333,10 +274,6 @@ class Maze:
         # return (arr[1], arr[0]), (arr[3], arr[2]), (arr[5], arr[4]), (self.r, self.r), (0, self.r), self.maze
         return (self.r, self.r), self.maze, (0, self.r)
 
-
-
-
-
 # ex2 = Maze(10)  # создание объекта лабиринта с каким-то радиусом
 # ex2.make_maze()  # обновление лабиринта
 # ex2.update_sek(1)  # обновление сектора (1, 2, 3, 4 - обновление сектора под номером )  1
@@ -345,104 +282,3 @@ class Maze:
 #####################################################################################   3
 # ex2.update_line()  # обновление координат проходов между секторами (0 - все, 1, 2, 3)    1
 ##################################################################################### 3  2
-
-# ex2.info()  # выводит инфу
-# # game = Game(500, ex2.maze)
-# # keys = {'right': pygame.K_RIGHT,
-# #         'left': pygame.K_LEFT,
-# #         'up': pygame.K_UP,
-# #         'down': pygame.K_DOWN}
-# # keys1 = {'right': pygame.K_d,
-# #          'left': pygame.K_a,
-# #          'up': pygame.K_w,
-# #          'down': pygame.K_s}
-# #
-# # game.add_players(Player(250, 250, 20, keys))
-# # game.add_players(Player(250, 250, 10, keys1))
-# #
-# # while True:
-# #     game.draw()
-# #     game.events()
-#
-#
-# def draw(screen, a, n):
-#     b = a // n
-#     screen.fill((0, 0, 0))
-#     for i in range(n):
-#         for g in range(n):
-#             try:
-#                 if ex2.maze[i][g] == 0:
-#                     pygame.draw.rect(screen, (255, 255, 255), (g * b, i * b, b, b))
-#             except Exception:
-#                 continue
-#
-#
-# C = 9
-# if __name__ == '__main__':
-#     # инициализация Pygame:
-#     pygame.init()
-#     # размеры окна:
-#
-#     # screen — холст, на котором нужно рисовать:
-#     screen = pygame.display.set_mode((500, 500))
-#     # формирование кадра:
-#     # команды рисования на холсте
-#
-#     # ...
-#     # ...
-#     # смена (отрисовка) кадра:
-#     draw(screen, 500, 220)
-#
-#     pygame.display.flip()
-#     pygame.display.set_caption('Крест')
-#     clock = pygame.time.Clock()
-#
-#     # ожидание закрытия окна:
-#     while pygame.event.wait().type != pygame.QUIT:
-#         pass
-#     # завершение работы:
-#     run = True
-#     while run:
-#         print(C)
-#         for event in pygame.event.get():
-#             if event.type == pygame.QUIT:
-#                 run = False
-#
-#         # ex2.update_sek(C % 4)
-#         # ex2.make_maze()
-#         ex2 = Maze(C + 11)
-#         # print(ex2.maze)
-#         # ex2.to_create()
-#         # ex2.make_maze()
-#         # ex2 = Maze(15)
-#         # ex2.to_create()
-#         # ex2.make_maze()
-#         # ex2.update_line(0)
-#         # ex2.line()
-#         draw(screen, 1000, 200)
-#
-#         # clock.tick(1)
-#
-#         pygame.display.flip()
-#         # screen.fill((0, 0, 0))
-#         C += 1
-#     pygame.quit()
-#
-# # print(ex.road)
-# # ex1 = Road('right', 8, maps, 3)
-# # ex1.to_create()
-# #
-# # ex2 = Road('down', 2, maps, 4, True)
-# # ex2.to_create()
-# # ex2 * ex1
-# # ex2 * ex
-# # for i in ex1.road:
-# #     print('\n')
-# #     for g in i:
-# #         if g in (2, 3, 4):
-# #             print(0, end='')
-# #
-# #         elif g == 9:
-# #             print(' ', end='')
-# #         else:
-# #             print('_', end='')

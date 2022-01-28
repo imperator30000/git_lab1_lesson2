@@ -1,5 +1,4 @@
 from settings import *
-from random import randrange
 import pygame
 from math import pi
 import datetime
@@ -41,7 +40,7 @@ class Drawing:
                 i, object, object_pos = obj
                 self.sc.blit(object, object_pos)
 
-    def time_clock(self, game):
+    def time_clock(self, game, vere):
         # таймер
         self.time_now -= 1
         display_time = str(self.time_now)
@@ -50,7 +49,7 @@ class Drawing:
             self.count_time += 1
             self.time_now = self.setting_time
             display_time = str(self.time_now)
-        if len(display_time) >= 5:
+        if int(display_time) >= 6000:
             display_time = str(int(display_time[:-2]) // 60) + ":" + str(
                 int(display_time[:-2]) % 60) + ":" + display_time[-2:]
         elif len(display_time) >= 3:
@@ -59,8 +58,7 @@ class Drawing:
                 END_COUNT.play(maxtime=500)
         else:
             display_time = "00" + ":" + display_time[-2:]
-        print(display_time)
-        display_time = "Update: " + display_time
+        display_time = f"Update {vere + 1} sector: " + display_time
         render = self.font.render(display_time, 0, BLACK)
         self.sc.blit(render, TIME_POS)
 
@@ -69,6 +67,14 @@ class Drawing:
         display_fps = str(int(clock.get_fps()))
         render = self.font.render(display_fps, 0, RED)
         self.sc.blit(render, FPS_POS)
+
+    def pozicion(self, sector):
+        sector += 1
+        if sector == 5:
+            sector = "you are not in the sector"
+        display_fps = str(f"You are in sector: {sector}")
+        render = self.font.render(display_fps, 0, RED)
+        self.sc.blit(render, POS_POS)
 
     def chek_win(self, player_pos, time):
         if player_pos[0] < 0:
@@ -79,18 +85,9 @@ class Drawing:
                 self.win(time)
 
     def win(self, time):
-        render = self.font_win.render("YOU WIN", 1, (randrange(0, 255), randrange(0, 255), randrange(0, 255)))
-        rect = pygame.Rect(0, 0, 1000, 300)
-        rect.center = HALF_WIDTH, HALF_HEIGHT
-        pygame.draw.rect(self.sc, BLACK, rect, border_radius=50)
-        self.sc.blit(render, (rect.centerx - 430, rect.centery - 140))
-        pygame.display.flip()
         if self.flag:
             set_time = str(datetime.datetime.now() - time)
             set_time = set_time[:set_time.index(".")].split(":")
-            # print(datetime.timedelta(hours=int(set_time[0]), minutes=int(set_time[1]), seconds=int(set_time[2])))
-            # print(datetime.timedelta(hours=0, minutes=count_time * setting_time // 100 // 60,
-            #                          seconds=count_time * setting_time // 100 % 60))
             game_time = datetime.timedelta(hours=int(set_time[0]), minutes=int(set_time[1]), seconds=int(set_time[2]))
             update_time = datetime.timedelta(hours=0, minutes=self.count_time * self.setting_time // 100 // 60,
                                              seconds=self.count_time * self.setting_time // 100 % 60)
@@ -102,7 +99,6 @@ class Drawing:
                 self.obj.window_win.objs['Radius'].text_ = str(self.obj.radius)
                 self.obj.window_win.objs['Radius'].update_text()
             except KeyError:
-                print(game_time + update_time)
                 flag = False
                 conn = sq.connect('GAME.db')
                 cur_ = conn.cursor()
@@ -152,7 +148,6 @@ class Drawing:
         x = int(x)
         y = int(y)
         x_map, y_map = 0, 0
-        # print(*self.MAZE.maze, sep='\n')
         if tuple([x, y]) not in self.map_arr[self.MAZE.check_quat(x, y)] and \
                 not self.MAZE.maze[y][x] or x == self.MAZE.r and \
                 y in (self.MAZE.r - self.MAZE.k, self.MAZE.r - self.MAZE.k + 1):
@@ -187,27 +182,11 @@ class Drawing:
             for g in range(len(self.map[i])):
                 if self.MAZE.check_quat(g, i, True, walls=True) == num:
                     self.map[i][g] = 0
-        # if not num:
-        #     self.map[self.MAZE.r - self.MAZE.k][self.MAZE.r] = 0
-        #     self.map[self.MAZE.r - self.MAZE.k + 1][self.MAZE.r] = 0
 
     def minimap_fill_quat(self):
         arr = []
-        print(sorted(list(set(self.map_arr[0]))),sorted(list(set(self.MAZE.maze_sekt[0].road))), sep='\n')
         for i in range(4):
             if sorted(list(set(self.map_arr[i]))) == sorted(list(set(self.MAZE.maze_sekt[i].road))):
-                # print('ok')
                 arr.append(i)
 
         return arr
-
-    # def anim(self, arr, speed, counter=0, name=0, x=0, y=0):
-    #     obj = arr[0]
-    #     if counter < speed:
-    #         counter += 1
-    #     else:
-    #         arr.rotate()
-    #         counter = 0
-    #     self.screen.blit(obj, (0, 0))
-    #
-    #     return counter

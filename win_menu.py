@@ -1,16 +1,14 @@
 import pygame as pg
 from settings import *
+from generation_lab import *
+
 
 class Obj:
-    def __init__(self, img, x_y, size, name, type_obj='title', text='', font_size=70, c=255, e=255, ch=False, ok=255,
+    def __init__(self, img, x_y, size, name, text='', font_size=70, c=255, e=255, ch=False, ok=255,
                  min_max=(11, 99), fun=lambda: '', step_spin=1, go_next_win=True):
-
-
-        self.click = CLICK_SOUND
         self.curs = 0
         self.active = False
         self.rect = pg.Rect(*x_y, *size)
-
         self.img = pg.transform.scale(img, size).convert_alpha()
         self.x_y = x_y
         self.size = size
@@ -20,13 +18,12 @@ class Obj:
         self.end_counter = e
         self.counter = c
         self.koef = 1
-        self.type_obj = type_obj
         self.ok_end = ok
         self.dependent_objects = []
         self.fun = fun
         self.enabled = False
         self.font_size = font_size
-        self.font = pg.font.SysFont('inkfree', font_size)
+        self.font = pg.font.SysFont('', font_size)
         self.text = self.font.render(text, True, (20, 20, 20)).convert_alpha()
         text_size = self.text.get_size()
         self.text_x_y = [self.x_y[i] + (self.size[i] - text_size[i]) // 2 for i in range(2)]
@@ -38,18 +35,7 @@ class Obj:
         self.recover()
 
     def spin(self, x_y, k):
-        if self.type_obj == 'spin':
-            text_ = int(self.text_)
-            a = self.in_obj(x_y)
-            if self.min_max[0] <= text_ + self.step_spin * k <= self.min_max[1] and a:
-                self.text_ = str(text_ + self.step_spin * k)
-                self.update_text()
-                self.fun()
-            keys = pg.key.get_pressed()
-            if keys[pg.K_SPACE] and self.min_max[0] <= text_ + 10 * k <= self.min_max[1] and a:
-                self.text_ = str(text_ + 10 * k)
-                self.update_text()
-                self.fun()
+        pass
 
     def update_text(self):
         self.text = self.font.render(self.text_, True, (0, 0, 0)).convert_alpha()
@@ -75,7 +61,7 @@ class Obj:
 
         if not self.enabled:
             a = self.in_obj(x_y)
-            if a and self.type_obj in 'win_pause_btn_play spin':
+            if a:
                 self.go_animation(150, 5)
                 for i in self.dependent_objects:
                     if not i.enabled:
@@ -83,21 +69,8 @@ class Obj:
             else:
                 self.recover()
 
-    def pressed(self, x_y, pressed):
-        a = self.in_obj(x_y)
-        if pressed and self.type_obj == 'btn' and a:
-            if not self.enabled:
-                self.enabled = True
-                self.go_animation(0, 5)
-                self.click.play()
-                for i in self.dependent_objects:
-                    i.enabled = True
-                    i.go_animation(0, 5)
-                return True
-            else:
-
-                self.recover(True)
-        return False
+    def pressed(self, x_y):
+        pass
 
     def go_animation(self, end, step):
 
@@ -128,22 +101,53 @@ class Obj:
         pass
 
 
-class InputBox(Obj):
-    def pressed(self, x_y, pressed):
-        # if self.in_obj(x_y) and pressed:
-        #     if self.active:
-        #         self.go_animation(255, 5)
-        #     else:
-        #         self.go_animation(150, 5)
-        #     self.active = not self.active
+class Title(Obj):
+    def choice(self, x_y):
         pass
 
+
+class SpinBox(Obj):
+    def spin(self, x_y, k):
+        text_ = int(self.text_)
+        a = self.in_obj(x_y)
+        if self.min_max[0] <= text_ + self.step_spin * k <= self.min_max[1] and a:
+            self.text_ = str(text_ + self.step_spin * k)
+            self.update_text()
+            self.fun()
+        keys = pg.key.get_pressed()
+        if keys[pg.K_SPACE] and self.min_max[0] <= text_ + 10 * k <= self.min_max[1] and a:
+            self.text_ = str(text_ + 10 * k)
+            self.update_text()
+            self.fun()
+
+
+class Button(Obj):
+
+    def pressed(self, x_y):
+        a = self.in_obj(x_y)
+        if a:
+            if not self.enabled:
+                self.enabled = True
+                self.go_animation(0, 5)
+                for i in self.dependent_objects:
+                    i.enabled = True
+                    i.go_animation(0, 5)
+                return True
+            else:
+
+                self.recover(True)
+        return False
+
+
+class InputBox(Obj):
+
     def input_txt(self, sim):
+
         self.curs += 1
         if self.active:
             if sim != 'backspace':
                 self.text_ += sim
-            else:
+            elif sim == 'backspace':
                 self.text_ = self.text_[:-1]
 
             self.text = self.font.render(self.text_, True, (0, 0, 0)).convert_alpha()
@@ -169,8 +173,21 @@ class InputBox(Obj):
                 i.go_animation(self.ok_end, 5)
 
 
+class Back:
+    def __init__(self, obj):
+        self.obj = obj
+        self.img = pg.transform.scale(pg.image.load(obj.name_f), obj.size)
+
+    def iteration(self):
+        pass
+
+    def run(self):
+        self.img.blit(self.obj.screen, (0, 0))
+        self.iteration()
+
+
 class Window:
-    def __init__(self, W_H, obj):
+    def __init__(self, W_H, obj=None):
 
         pg.init()
         pg.font.init()
@@ -178,17 +195,20 @@ class Window:
         self.objs = dict()
         self.size = W_H
         self.returned = dict()
-        self.black = Obj(pg.image.load('img/black.png'), (0, 0), W_H, 'black', ch=True, ok=0, e=0, c=255)
+        self.black = Title(pg.image.load('img/black.png'), (0, 0), W_H, 'black', ch=True, ok=0, e=0, c=255)
         self.clock = pg.time.Clock()
         self.m_action = [False, False, False, False]  # движение нажатие
         self.m_pos = (-1, -2)
-        # self.obj = obj(self)
-        # self.obj = MENU_BACK(self, SELECTED_TEXTURES[0])
-        self.obj = obj(self, SELECTED_TEXTURES[0])
-
+        self.name_f = 'img/black.png'
+        try:
+            self.obj = obj(self)
+        except TypeError:
+            if not obj is None:
+                self.name_f = obj
+            self.obj = Back(self)
 
     def update_back(self, back):
-        self.obj = back(self,SELECTED_TEXTURES[0])
+        self.obj = back(self)
 
     def update_obj_fun(self, name, fun):
         for i in self.objs:
@@ -220,7 +240,7 @@ class Window:
     def run(self):
         pg.display.flip()
         pg.mouse.set_visible(True)
-        self.black = Obj(pg.image.load('img/black.png'), (0, 0), self.size, 'black', ch=True, ok=0, e=0, c=255)
+        self.black = Title(pg.image.load('img/black.png'), (0, 0), self.size, 'black', ch=True, ok=0, e=0, c=255)
         self.objs['black'] = self.black
         self.restart()
         while True:
@@ -258,7 +278,7 @@ class Window:
                 if any(self.m_action[:2]):
                     self.objs[i].choice(self.m_pos)
                 if self.m_action[1]:
-                    pressed = self.objs[i].pressed(self.m_pos, self.m_action[1])
+                    pressed = self.objs[i].pressed(self.m_pos)
                     if pressed and self.objs[i].go_next_win:
                         self.black.ok_end = 255
 
@@ -275,6 +295,75 @@ class Window:
 
             pg.display.flip()
             self.clock.tick(60)
+
+
+class MazeB(Back):
+    counter = 0
+    maze = None
+    step = 5
+    size = 20
+
+    def update(self):
+        self.counter = 0
+        fun = lambda x, y: 1 if y % 2 or x % 2 else 0
+        arr = [[fun(g, i) for g in range((self.obj.size[0] - 60) // self.size)] for i in
+               range((self.obj.size[1] - 60) // self.size)]
+
+        m_pos = [(i - 10) // self.size - 1 for i in self.obj.m_pos]
+        if fun(*m_pos):
+            start = [i - 1 for i in m_pos]
+            pos = []
+            for i in range(3):
+                for g in range(3):
+                    pos.append([start[0] + g, start[1] + i])
+            for g in pos:
+                if not fun(*g) and 0 <= g[0] <= (self.obj.size[0] - 60) // self.size and 0 <= g[1] <= (
+                        self.obj.size[1] - 60) // self.size:
+                    m_pos = g
+                    break
+
+        if not fun(*m_pos) and 0 <= m_pos[0] <= (self.obj.size[0] - 60) // self.size and 0 <= m_pos[1] <= (
+                self.obj.size[1] - 60) // self.size:
+            self.maze = Road(m_pos, arr)
+            self.maze.to_create()
+
+        else:
+            self.maze = Road([0, 0], arr)
+            self.maze.to_create()
+
+    def back(self):
+        if self.maze is None:
+            self.update()
+        if self.counter + self.step >= len(self.maze.road):
+            self.step *= -1
+
+        elif self.counter + self.step <= 0:
+            self.step *= -1
+            self.update()
+
+        self.counter += self.step
+        for i in range(self.counter):
+            try:
+                pg.draw.rect(self.obj.screen, (25, 25, 25),
+                             (30 + self.maze.road[i][0] * self.size,
+                              30 + self.maze.road[i][1] * self.size, self.size, self.size))
+            except Exception:
+                self.obj.m_pos = [30, 30]
+                self.update()
+                break
+
+    def iteration(self):
+        self.obj.screen.fill((150, 150, 150))
+        pg.draw.rect(self.obj.screen, (75, 75, 75),
+                     (10, 10, self.obj.size[0] - 20, self.obj.size[1] - 20))
+        self.back()
+
+
+#
+#
+# window = Window((1200, 800), MazeB)
+# window1 = Window((1200, 800), MazeB)
+# window.run()
 
 # app = Window((1200, 800), pg.image.load('img/back.png'))
 # app.run()
